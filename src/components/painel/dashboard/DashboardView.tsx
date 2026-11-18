@@ -3,7 +3,7 @@ import Link from "next/link";
 import AnimatedNumber from "./AnimatedNumber";
 import { PeriodTransition, PendingArea } from "./PeriodTransition";
 import PeriodControl from "./PeriodControl";
-import { Breakdown, Funnel, TextLink, type FunnelStage } from "./Viz";
+import { Funnel, Split, TextLink, type FunnelStage } from "./Viz";
 import RecentOrders, { type RecentOrder } from "./RecentOrders";
 import LiveVisitors from "@/components/painel/LiveVisitors";
 import ReconcileOnMount from "@/components/painel/ReconcileOnMount";
@@ -171,22 +171,24 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         <Box icon="device" title="Como compram" question="Meio de pagamento e aparelho">
           <PendingArea>
             <div className="grid gap-4 xl:grid-cols-2">
-              <Card title="Formas de pagamento">
-                <Breakdown
-                  firstLabel="Método"
-                  lastLabel="Aprovação"
+              <Card title="Formas de pagamento" subtitle="Por onde o dinheiro entrou">
+                <Split
+                  metricLabel="Aprovação"
+                  empty="Nenhuma venda paga no período."
                   rows={[
                     {
                       ...pix,
-                      last: pixRate === null ? "—" : <AnimatedNumber value={pixRate * 100} format="pct" />,
-                      lastNote: ap.pixTotal > 0 ? `${ap.pixPaid} de ${ap.pixTotal} pagos` : "sem Pix",
-                      lastHint: "Pix pagos ÷ Pix gerados no período",
+                      metric: pixRate === null ? "—" : <AnimatedNumber value={pixRate * 100} format="pct" />,
+                      metricRate: pixRate,
+                      metricNote: ap.pixTotal > 0 ? `${ap.pixPaid} de ${ap.pixTotal} pagos` : "sem Pix",
+                      metricHint: "Pix pagos ÷ Pix gerados no período",
                     },
                     {
                       ...card,
-                      last: cardRate === null ? "—" : <AnimatedNumber value={cardRate * 100} format="pct" />,
-                      lastNote: ap.cardDecided > 0 ? `${ap.cardApproved} de ${ap.cardDecided} aprovados` : "sem cartão",
-                      lastHint: "Aprovados ÷ decididos (aprovados + recusados). Cartão em análise não entra.",
+                      metric: cardRate === null ? "—" : <AnimatedNumber value={cardRate * 100} format="pct" />,
+                      metricRate: cardRate,
+                      metricNote: ap.cardDecided > 0 ? `${ap.cardApproved} de ${ap.cardDecided} aprovados` : "sem cartão",
+                      metricHint: "Aprovados ÷ decididos (aprovados + recusados). Cartão em análise não entra.",
                     },
                   ]}
                 />
@@ -194,13 +196,13 @@ export default function DashboardView({ data }: { data: DashboardData }) {
 
               {/* Tablet entra em Mobile, e pedidos anteriores ao registro de
                   dispositivo ficam de fora — mesma regra da tela cheia. */}
-              <Card title="Dispositivos" link={{ href: "/painel/dispositivos", label: "Detalhes" }}>
-                <Breakdown
-                  firstLabel="Dispositivo"
-                  lastLabel="Ticket médio"
+              <Card title="Dispositivos" subtitle="De onde o cliente comprou" link={{ href: "/painel/dispositivos", label: "Detalhes" }}>
+                <Split
+                  metricLabel="Ticket médio"
+                  empty="Nenhuma venda paga no período."
                   rows={[
-                    { ...mobile, last: ticketMobile === null ? "—" : <AnimatedNumber value={ticketMobile} format="brl" /> },
-                    { ...desktop, last: ticketDesktop === null ? "—" : <AnimatedNumber value={ticketDesktop} format="brl" /> },
+                    { ...mobile, metric: ticketMobile === null ? "—" : <AnimatedNumber value={ticketMobile} format="brl" /> },
+                    { ...desktop, metric: ticketDesktop === null ? "—" : <AnimatedNumber value={ticketDesktop} format="brl" /> },
                   ]}
                 />
               </Card>

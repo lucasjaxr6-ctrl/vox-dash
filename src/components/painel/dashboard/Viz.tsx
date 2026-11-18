@@ -117,6 +117,106 @@ export function Breakdown({
     </div>
   );
 }
+export type SplitRow = Part & {
+  /** Indicador próprio de cada item (aprovação, ticket médio...). */
+  metric: React.ReactNode;
+  metricNote?: string;
+  metricHint?: string;
+  /** 0–1: desenha uma barrinha sob o indicador (ex.: taxa de aprovação). */
+  metricRate?: number | null;
+};
+
+/**
+ * Divisão em DUAS partes (Pix × Cartão, Mobile × Desktop): uma barra única de
+ * 100% mostra a fatia de cada um no valor vendido, com uma frase que resume
+ * quem lidera. Embaixo, um bloco por item com o valor em destaque, as vendas,
+ * a fatia e o indicador próprio de cada cartão — sem tabela de cinco colunas.
+ */
+export function Split({ rows, metricLabel, empty }: { rows: SplitRow[]; metricLabel: string; empty: string }) {
+  const total = rows.reduce((s, r) => s + r.cents, 0);
+  const shareOf = (r: SplitRow) => (total > 0 ? (r.cents / total) * 100 : 0);
+  const leader = total > 0 ? rows.reduce((a, b) => (b.cents > a.cents ? b : a)) : null;
+  let left = 0;
+  return (
+    <div className="flex min-w-0 flex-1 flex-col">
+      <p className="text-[13px] text-mid">
+        {leader ? (
+          <>
+            <span className="font-semibold text-hi">{leader.label}</span> responde por{" "}
+            <span className="font-semibold tabular-nums text-hi">{Math.round(shareOf(leader))}%</span> do valor vendido
+          </>
+        ) : (
+          empty
+        )}
+      </p>
+
+      {/* Barra de 100%: cada segmento é a fatia do item no valor. */}
+      <div aria-hidden className="relative mt-3 h-2.5 overflow-hidden rounded-full bg-hover">
+        {total > 0 &&
+          rows.map((r) => {
+            const w = shareOf(r);
+            const seg = (
+              <span
+                key={r.label}
+                className="absolute inset-y-0 transition-[left,width] duration-[420ms] ease-fluid"
+                style={{ left: `calc(${left}% + ${left > 0 ? 1 : 0}px)`, width: `calc(${w}% - ${left > 0 ? 1 : 0}px)`, background: r.color }}
+              />
+            );
+            left += w;
+            return seg;
+          })}
+      </div>
+
+      <div className="mt-5 grid flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+        {rows.map((r) => {
+          const dot = r.icon ?? <span aria-hidden className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: r.color }} />;
+          const rate = r.metricRate == null ? null : clamp(r.metricRate * 100);
+          return (
+            <div key={r.label} className="flex min-w-0 flex-col rounded-xl bg-card p-4 ring-1 ring-line">
+              <div className="flex items-center justify-between gap-2">
+                <span className="flex min-w-0 items-center gap-2">
+                  {dot}
+                  <span className="truncate text-[13px] font-medium text-hi">{r.label}</span>
+                </span>
+                <span className="shrink-0 rounded-full bg-soft px-2 py-0.5 text-[11.5px] font-medium tabular-nums text-mid ring-1 ring-line">
+                  {total > 0 ? <AnimatedNumber value={shareOf(r)} format="pct" /> : "—"}
+                </span>
+              </div>
+              <div className="mt-3 whitespace-nowrap text-[20px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-hi">
+                <AnimatedNumber value={r.cents} format="brl" />
+              </div>
+              <div className="mt-1.5 text-[12.5px] tabular-nums text-low">
+                <AnimatedNumber value={r.count} /> {r.count === 1 ? "venda" : "vendas"}
+              </div>
+
+              <div className="mt-auto pt-4">
+                <div className="border-t border-line pt-3" title={r.metricHint}>
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="whitespace-nowrap text-[12px] text-low">
+                      {metricLabel}
+                      {r.metricHint && <span aria-hidden className="ml-1 text-dim">ⓘ</span>}
+                    </span>
+                    <span className="whitespace-nowrap text-[15px] font-semibold tabular-nums text-hi">{r.metric}</span>
+                  </div>
+                  {rate !== null && (
+                    <span aria-hidden className="relative mt-2 block h-1 overflow-hidden rounded-full bg-hover">
+                      <span
+                        className={`absolute inset-0 ${BAR_MOTION}`}
+                        style={{ background: r.color, clipPath: `inset(0 ${clamp(100 - rate)}% 0 0 round 999px)` }}
+                      />
+                    </span>
+                  )}
+                  {r.metricNote && <p className="mt-1.5 text-right text-[11.5px] tabular-nums text-low">{r.metricNote}</p>}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export type FunnelStage = {
   label: string;
   /** Nome curto para a coluna ("Dados", "Compra"); o `label` completo vai na dica e na tabela. */
