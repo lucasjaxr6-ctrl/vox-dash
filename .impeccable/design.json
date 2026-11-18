@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-04T00:00:00Z",
+  "title": "Design System: VOX",
+  "scope": "Public/marketing surface (site root, src/components/landing, tokens scoped under .landing as --l-*). The panel/admin/login keep their incumbent system in src/app/globals.css (--c-*) + tailwind.config.ts (brand #1F846E / #22BF9D, Inter), sharing logo and VOX green; the buyer checkout wears each merchant's theme.",
+  "extensions": {
+    "colorMeta": {
+      "vox-green": { "role": "primary", "displayName": "VOX Green", "canonical": "#1f846e", "tonalRamp": ["#082a23", "#0f4539", "#186d5a", "#1f846e", "#22bf9d", "#5fd6bb", "#a4ead9", "#e3f2ee"] },
+      "vox-green-hover": { "role": "primary", "displayName": "Deep Green", "canonical": "#186d5a", "tonalRamp": ["#082a23", "#0f4539", "#186d5a", "#1f846e", "#22bf9d", "#5fd6bb", "#a4ead9", "#e3f2ee"] },
+      "pulse-mint": { "role": "secondary", "displayName": "Pulse Mint", "canonical": "#73e8ce", "tonalRamp": ["#0a2a23", "#11473b", "#1a6b59", "#249078", "#3cb89b", "#73e8ce", "#a6f1e0", "#d6f9f1"] },
+      "logo-bright": { "role": "secondary", "displayName": "Logo Bright", "canonical": "#22bf9d", "tonalRamp": ["#082a23", "#0f4539", "#186d5a", "#1f846e", "#22bf9d", "#5fd6bb", "#a4ead9", "#e3f2ee"] },
+      "alert": { "role": "tertiary", "displayName": "Burnt Orange", "canonical": "#c2410c", "tonalRamp": ["#3b1404", "#5e2007", "#8a2f0a", "#c2410c", "#e0662f", "#f2b79b", "#f8d3c1", "#fdeee6"] },
+      "alert-wash": { "role": "tertiary", "displayName": "Alert Wash", "canonical": "#fdeee6", "tonalRamp": ["#3b1404", "#5e2007", "#8a2f0a", "#c2410c", "#e0662f", "#f2b79b", "#f8d3c1", "#fdeee6"] },
+      "alert-edge": { "role": "tertiary", "displayName": "Alert Edge", "canonical": "#f2b79b", "tonalRamp": ["#3b1404", "#5e2007", "#8a2f0a", "#c2410c", "#e0662f", "#f2b79b", "#f8d3c1", "#fdeee6"] },
+      "paper": { "role": "neutral", "displayName": "Control Paper", "canonical": "#f3f5f4", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "surface": { "role": "neutral", "displayName": "Panel White", "canonical": "#ffffff", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "ink": { "role": "neutral", "displayName": "Graphite", "canonical": "#0e1714", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "mute": { "role": "neutral", "displayName": "Instrument Grey", "canonical": "#56635f", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "dim": { "role": "neutral", "displayName": "Dim Grey", "canonical": "#7b8884", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "#d8dfdc", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "line-strong": { "role": "neutral", "displayName": "Strong Hairline", "canonical": "#b9c4c0", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#b9c4c0", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "grid": { "role": "neutral", "displayName": "Grid Ink", "canonical": "rgba(14, 23, 20, 0.055)" },
+      "night": { "role": "neutral", "displayName": "Graphite Band", "canonical": "#0e1714", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#a9bdb7", "#d8dfdc", "#f3f5f4", "#ffffff"] },
+      "night-mute": { "role": "neutral", "displayName": "Night Grey", "canonical": "#a9bdb7", "tonalRamp": ["#0e1714", "#2b3633", "#56635f", "#7b8884", "#a9bdb7", "#d8dfdc", "#f3f5f4", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline only; balanced wrap." },
+      "headline": { "displayName": "Headline", "purpose": "Section headlines, max 18ch, balanced." },
+      "headline-closing": { "displayName": "Closing headline", "purpose": "The graphite closing band headline, max 16ch." },
+      "statement": { "displayName": "Statement", "purpose": "The one Dim Grey sentence carrying the real platform numbers." },
+      "figure": { "displayName": "Figure", "purpose": "Real numbers from conteudo.ts growing inside the statement; tabular, Graphite." },
+      "title": { "displayName": "Title", "purpose": "Feature group headings." },
+      "title-sm": { "displayName": "Title small", "purpose": "Activation station titles." },
+      "body": { "displayName": "Body", "purpose": "Supporting copy and section-header paragraphs, Instrument Grey, measure 30-36rem; 18px on the hero from sm." },
+      "body-sm": { "displayName": "Body small", "purpose": "Station text, gateway sheet rows (500 names), the activation status line (600)." },
+      "body-xs": { "displayName": "Body extra small", "purpose": "Feature, group-summary and security-guarantee descriptions; legend descriptions at 14px." },
+      "item": { "displayName": "Item", "purpose": "Feature, security-guarantee and capture-type names." },
+      "item-sm": { "displayName": "Item small", "purpose": "Sequence-step actions." },
+      "control": { "displayName": "Control", "purpose": "Segmented-filter labels and lane chips (12.5px below sm)." },
+      "note": { "displayName": "Note", "purpose": "Sequence-step notes, pricing line under the hero CTA, footer." },
+      "label": { "displayName": "Label", "purpose": "Legend heading; card capture type in sheet rows at 13px 500. Sentence case, never tracked out." },
+      "label-sm": { "displayName": "Label small", "purpose": "Gateway sheet header row." },
+      "caption": { "displayName": "Caption", "purpose": "Demonstration and figure captions, status-chip text, legend counts." },
+      "numeral": { "displayName": "Numeral", "purpose": "Numbers inside the 28px station dots; tabular." },
+      "numeral-sm": { "displayName": "Numeral small", "purpose": "Numbers inside the 20px sequence badges; tabular." }
+    },
+    "shadows": [
+      { "name": "stage", "value": "0 30px 60px -40px rgba(14,23,20,.35)", "purpose": "White hero diagram stage floating on the grid." },
+      { "name": "checkout-node", "value": "0 18px 40px -24px rgba(14,23,20,.45)", "purpose": "Circular 'Seu checkout' node." },
+      { "name": "route-node", "value": "0 10px 24px -18px rgba(14,23,20,.5)", "purpose": "Shopify and gateway nodes." },
+      { "name": "green-glow", "value": "0 1px 0 rgba(255,255,255,.14) inset, 0 8px 18px -10px rgba(31,132,110,.65)", "purpose": "Primary button at rest." },
+      { "name": "green-glow-hover", "value": "0 1px 0 rgba(255,255,255,.14) inset, 0 12px 22px -12px rgba(31,132,110,.8)", "purpose": "Primary button hover." },
+      { "name": "segment-lift", "value": "0 1px 3px rgba(14,23,20,.12)", "purpose": "White indicator under the active segment of the segmented filter." },
+      { "name": "pulse-ring", "value": "0 0 0 4px rgba(115,232,206,.35)", "purpose": "Mint halo of the sequence diagram's travelling pulse." },
+      { "name": "nav-paper", "value": "background rgba(243,245,244,.86); backdrop-filter: blur(12px) saturate(1.2)", "purpose": "Nav after 16px of scroll; the bottom hairline is permanent." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Button lift, arrow nudge, route redraw." },
+      { "name": "button-lift", "value": "translateY(-1px), 0.25s; arrow translateX(3px)", "purpose": "Primary button hover." },
+      { "name": "route-draw", "value": "pathLength 0 to 1, 0.9s, ease-out-expo", "purpose": "The rerouted Pix line drawing itself after the manual switch." },
+      { "name": "pulse", "value": "animateMotion 3.2-3.6s, spline 0.45 0 0.25 1, staggered", "purpose": "Sales travelling active routes; removed under reduced motion." },
+      { "name": "blocked-shake", "value": "x -50% -53% -47% -52% -48% -50%, 0.5s", "purpose": "Gateway node entering Bloqueada; skipped under reduced motion." },
+      { "name": "state-color", "value": "colors 0.3s; stroke .35s", "purpose": "Node and line state changes in the hero diagram." },
+      { "name": "rail-progress", "value": "scaleX (lg) / scaleY bound to scroll, offset start 78% to end 60%", "purpose": "Activation progress line; stations light as it reaches them; full under reduced motion." },
+      { "name": "lit-fade", "value": "colors / stroke 0.5s", "purpose": "Stations, status chips, sequence arrows, badges and guarantees changing between pending and lit." },
+      { "name": "segment-slide", "value": "shared layout spring, stiffness 420, damping 34", "purpose": "Active-segment indicator; instant under reduced motion." },
+      { "name": "row-reflow", "value": "layout spring 380/34; enter opacity 0 y 8px; exit opacity 0.15s; dim to .32", "purpose": "Gateway sheet rows on filter and legend highlight; no layout animation under reduced motion." },
+      { "name": "sequence-pulse", "value": "left 0 to 100%, opacity 1 to 0, 0.9s, cubic-bezier(0.45, 0, 0.25, 1), once", "purpose": "Single pulse along each sequence arrow as it lights; none under reduced motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "owner-viewport", "value": "1046px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one green action per region: 'Criar conta grátis', and the decisive manual-switch step in the diagram.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Criar conta grátis <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14M13 6l6 6-6 6\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.55rem; border-radius: 10px; background: #1f846e; color: #fff; padding: 0.9rem 1.35rem; font: 600 15px/1.2 Inter, system-ui, sans-serif; letter-spacing: -0.005em; text-decoration: none; box-shadow: 0 1px 0 rgba(255,255,255,.14) inset, 0 8px 18px -10px rgba(31,132,110,.65); transition: background-color .2s, transform .25s cubic-bezier(0.22,1,0.36,1), box-shadow .25s cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary svg { transition: transform .25s cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover { background: #186d5a; transform: translateY(-1px); box-shadow: 0 1px 0 rgba(255,255,255,.14) inset, 0 12px 22px -12px rgba(31,132,110,.8); } .ds-btn-primary:hover svg { transform: translateX(3px); } .ds-btn-primary:active { transform: translateY(0); } .ds-btn-primary:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary control with a leading status dot; drives the diagram simulation.",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\"><span class=\"ds-dot\"></span>Simular gateway bloqueado</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 0.5rem; border-radius: 10px; border: 1px solid #d8dfdc; background: #fff; color: #0e1714; padding: 0.6rem 0.95rem; font: 600 14px/1.2 Inter, system-ui, sans-serif; cursor: pointer; transition: border-color .2s, background-color .2s; } .ds-btn-outline:hover { border-color: #b9c4c0; } .ds-btn-outline:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; } .ds-btn-outline:disabled { opacity: .6; cursor: progress; } .ds-btn-outline .ds-dot { width: 8px; height: 8px; border-radius: 999px; background: #c2410c; }"
+    },
+    {
+      "name": "Text Link",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Graphite secondary link with a nudging arrow ('Ver como funciona').",
+      "html": "<a class=\"ds-link\" href=\"#\">Ver como funciona <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v14M6 13l6 6 6-6\"/></svg></a>",
+      "css": ".ds-link { display: inline-flex; align-items: center; gap: 0.5rem; color: #0e1714; font: 600 15px/1.2 Inter, system-ui, sans-serif; text-decoration: none; transition: color .15s; } .ds-link svg { transition: transform .15s; } .ds-link:hover { color: #1f846e; } .ds-link:hover svg { transform: translateY(2px); } .ds-link:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; }"
+    },
+    {
+      "name": "Segmented Filter",
+      "kind": "chip",
+      "refersTo": "segmented-control",
+      "description": "Radiogroup filter on a paper track; the active segment sits on a white 8px indicator with a hair of lift.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Filtrar gateways\"><button class=\"ds-seg-on\" role=\"radio\" aria-checked=\"true\" type=\"button\">Todos <span>13</span></button><button role=\"radio\" aria-checked=\"false\" type=\"button\">Pix e cartão <span>9</span></button><button role=\"radio\" aria-checked=\"false\" type=\"button\">Só Pix <span>4</span></button></div>",
+      "css": ".ds-seg { display: inline-flex; padding: 4px; border-radius: 10px; border: 1px solid #d8dfdc; background: #f3f5f4; font-family: Inter, system-ui, sans-serif; } .ds-seg button { border: 0; background: transparent; border-radius: 8px; padding: 6px 14px; font-size: 13.5px; font-weight: 600; color: #56635f; cursor: pointer; transition: color .15s, background-color .2s, box-shadow .2s; } .ds-seg button span { font-variant-numeric: tabular-nums; color: #56635f; } .ds-seg button:hover { color: #0e1714; } .ds-seg .ds-seg-on { background: #fff; color: #0e1714; box-shadow: 0 1px 3px rgba(14,23,20,.12); } .ds-seg button:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; }"
+    },
+    {
+      "name": "Activation Station",
+      "kind": "custom",
+      "refersTo": "status-chip",
+      "description": "A station on the activation rail: 28px numbered dot, station title, text, and status chips with the panel's real status names (lit vs pending).",
+      "html": "<div class=\"ds-rail\"><div class=\"ds-st\"><span class=\"ds-st-dot ds-on\">3</span><h3>Domínio e gateway</h3><p>O checkout no seu endereço, com Pix e cartão no gateway que você já usa.</p><span class=\"ds-chip ds-on\"><em></em><b>Domínio</b><i>Verificado</i></span><span class=\"ds-chip ds-on\"><em></em><b>Gateway</b><i>Ativo</i></span></div><div class=\"ds-st\"><span class=\"ds-st-dot\">4</span><h3>E-mails da compra</h3><p>Conecte o Resend e os e-mails saem com a sua marca.</p><span class=\"ds-chip\"><em></em><b>Resend</b><i>pendente</i></span></div></div>",
+      "css": ".ds-rail { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 520px; padding-top: 0; font-family: Inter, system-ui, sans-serif; background-image: linear-gradient(to right, #1f846e 50%, transparent 50%), repeating-linear-gradient(to right, #b9c4c0 0 4px, transparent 4px 10px); background-size: 100% 1px; background-repeat: no-repeat; background-position: 14px 13px, 14px 13px; } .ds-st { position: relative; padding-top: 56px; } .ds-st-dot { position: absolute; left: 0; top: 0; display: flex; width: 28px; height: 28px; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid #b9c4c0; background: #f3f5f4; color: #56635f; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; transition: background-color .5s, border-color .5s, color .5s; } .ds-st-dot.ds-on { border-color: #1f846e; background: #1f846e; color: #fff; } .ds-st h3 { margin: 0; font: 700 22px/1.2 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.025em; color: #0e1714; } .ds-st p { margin: 8px 0 16px; font-size: 15px; line-height: 1.625; color: #56635f; } .ds-chip { display: flex; width: fit-content; align-items: center; gap: 8px; margin-top: 6px; padding: 4px 10px; border-radius: 8px; border: 1px solid #d8dfdc; font-size: 12.5px; transition: border-color .5s, background-color .5s; } .ds-chip em { width: 6px; height: 6px; border-radius: 999px; background: #b9c4c0; } .ds-chip b { font-weight: 500; color: #0e1714; } .ds-chip i { font-style: normal; color: #56635f; } .ds-chip.ds-on { border-color: rgba(31,132,110,.35); background: #fff; } .ds-chip.ds-on em { background: #1f846e; } .ds-chip.ds-on i { font-weight: 600; color: #1f846e; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "Fixed paper nav with a permanent hairline; translucent paper after scroll.",
+      "html": "<nav class=\"ds-nav\"><span class=\"ds-nav-brand\">VOX</span><span class=\"ds-nav-links\"><a href=\"#\">Como funciona</a><a href=\"#\">Gateways</a><a href=\"#\">Recursos</a><a href=\"#\">Segurança</a></span><span class=\"ds-nav-actions\"><a class=\"ds-nav-entrar\" href=\"#\">Entrar</a><a class=\"ds-nav-cta\" href=\"#\">Criar conta grátis</a></span></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 64px; padding: 0 32px; background: rgba(243,245,244,.86); backdrop-filter: blur(12px) saturate(1.2); border-bottom: 1px solid #d8dfdc; font-family: Inter, system-ui, sans-serif; } .ds-nav-brand { font: 800 19px/1 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.03em; color: #0e1714; } .ds-nav-links { display: flex; gap: 32px; } .ds-nav-links a { font-size: 14px; font-weight: 500; color: #56635f; text-decoration: none; transition: color .15s; } .ds-nav-links a:hover { color: #0e1714; } .ds-nav-actions { display: flex; align-items: center; gap: 12px; } .ds-nav-entrar { border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600; color: #0e1714; text-decoration: none; transition: background-color .15s; } .ds-nav-entrar:hover { background: rgba(14,23,20,.05); } .ds-nav-cta { border-radius: 10px; background: #1f846e; color: #fff; padding: 0.55rem 0.95rem; font-size: 14px; font-weight: 600; text-decoration: none; box-shadow: 0 1px 0 rgba(255,255,255,.14) inset, 0 8px 18px -10px rgba(31,132,110,.65); transition: background-color .2s; } .ds-nav-cta:hover { background: #186d5a; } .ds-nav a:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; }"
+    },
+    {
+      "name": "Route Node",
+      "kind": "custom",
+      "refersTo": "route-node",
+      "description": "Gateway node in the route diagram: real logo chip, name, status in its one color (Ativo / Configurado / Bloqueada).",
+      "html": "<div class=\"ds-nodes\"><div class=\"ds-node ds-node-ativo\"><span class=\"ds-chip\"></span><span><b>Appmax</b><i><em></em>Ativo</i></span></div><div class=\"ds-node\"><span class=\"ds-chip\"></span><span><b>Mercado Pago</b><i><em></em>Configurado</i></span></div><div class=\"ds-node ds-node-bloq\"><span class=\"ds-chip\"></span><span><b>PushinPay</b><i><em></em>Bloqueada</i></span></div></div>",
+      "css": ".ds-nodes { display: grid; gap: 12px; max-width: 200px; font-family: Inter, system-ui, sans-serif; } .ds-node { display: flex; align-items: center; gap: 10px; border-radius: 12px; border: 1px solid #d8dfdc; background: #fff; padding: 9px 11px; box-shadow: 0 10px 24px -18px rgba(14,23,20,.5); transition: background-color .3s, border-color .3s; } .ds-node:hover { border-color: #b9c4c0; } .ds-chip { width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; border: 1px solid #d8dfdc; background: #fff; } .ds-node b { display: block; font-size: 14px; font-weight: 600; color: #0e1714; line-height: 1.2; } .ds-node i { display: flex; align-items: center; gap: 6px; font-style: normal; font-size: 12px; font-weight: 500; color: #56635f; margin-top: 2px; } .ds-node em { width: 6px; height: 6px; border-radius: 999px; background: #b9c4c0; } .ds-node-ativo { border-color: rgba(31,132,110,.45); } .ds-node-ativo i { color: #1f846e; } .ds-node-ativo em { background: #1f846e; } .ds-node-bloq { border-color: #f2b79b; background: #fdeee6; } .ds-node-bloq i { color: #c2410c; } .ds-node-bloq em { background: #c2410c; }"
+    },
+    {
+      "name": "Route Diagram",
+      "kind": "custom",
+      "refersTo": "diagram-stage",
+      "description": "Signature: checkout node inside the logo's echo rings, active route with a mint-haloed pulse, dashed reserve route, labeled demonstration.",
+      "html": "<figure class=\"ds-stage\"><svg viewBox=\"0 0 360 200\" width=\"100%\" aria-hidden=\"true\"><circle cx=\"130\" cy=\"100\" r=\"52\" fill=\"none\" stroke=\"#1F846E\" stroke-opacity=\".3\" stroke-width=\"1.4\"/><circle cx=\"130\" cy=\"100\" r=\"110\" fill=\"none\" stroke=\"#1F846E\" stroke-opacity=\".16\" stroke-dasharray=\"2 6\"/><path d=\"M20 100H130C190 100 230 50 330 50\" fill=\"none\" stroke=\"#1F846E\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M130 100C190 100 230 150 330 150\" fill=\"none\" stroke=\"#B9C4C0\" stroke-width=\"1.4\" stroke-dasharray=\"4 6\" stroke-linecap=\"round\"/><circle cx=\"230\" cy=\"68\" r=\"7\" fill=\"#73E8CE\" opacity=\".35\"/><circle cx=\"230\" cy=\"68\" r=\"3.4\" fill=\"#1F846E\"/><circle cx=\"130\" cy=\"100\" r=\"34\" fill=\"#fff\" stroke=\"#1F846E\"/><text x=\"130\" y=\"104\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"700\" fill=\"#0E1714\" font-family=\"Bricolage Grotesque, system-ui, sans-serif\">Seu checkout</text></svg><figcaption>Demonstração com integrações reais do VOX</figcaption></figure>",
+      "css": ".ds-stage { margin: 0; max-width: 420px; border-radius: 18px; border: 1px solid #d8dfdc; background: #fff; padding: 24px; box-shadow: 0 30px 60px -40px rgba(14,23,20,.35); } .ds-stage figcaption { margin-top: 16px; padding-top: 16px; border-top: 1px solid #d8dfdc; font: 400 12.5px/1.5 Inter, system-ui, sans-serif; color: #56635f; }"
+    },
+    {
+      "name": "Gateway Sheet",
+      "kind": "custom",
+      "refersTo": "gateway-sheet",
+      "description": "Technical sheet of the network: 14px bordered frame, paper header row, rows with logo tile, name, Pix check and card capture type; non-matching rows dim when a legend type is highlighted.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-sheet-h\"><span>Gateway</span><span>Pix</span><span>Cartão</span></div><div class=\"ds-sheet-r\"><span class=\"ds-sheet-n\"><span class=\"ds-tile\"></span>Appmax</span><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#1f846e\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" role=\"img\" aria-label=\"Sim\"><path d=\"m5 12 5 5L20 7\"/></svg><span class=\"ds-sheet-t\">Transparente</span></div><div class=\"ds-sheet-r ds-dim\"><span class=\"ds-sheet-n\"><span class=\"ds-tile\"></span>Mercado Pago</span><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#1f846e\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" role=\"img\" aria-label=\"Sim\"><path d=\"m5 12 5 5L20 7\"/></svg><span class=\"ds-sheet-t\">Tokenizado</span></div><div class=\"ds-sheet-r\"><span class=\"ds-sheet-n\"><span class=\"ds-tile\"></span>Vext</span><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#1f846e\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\" role=\"img\" aria-label=\"Sim\"><path d=\"m5 12 5 5L20 7\"/></svg><span class=\"ds-sheet-t ds-none\">—</span></div></div>",
+      "css": ".ds-sheet { max-width: 440px; overflow: hidden; border-radius: 14px; border: 1px solid #d8dfdc; background: #fff; font-family: Inter, system-ui, sans-serif; } .ds-sheet-h, .ds-sheet-r { display: grid; grid-template-columns: minmax(9rem,14rem) 3rem minmax(0,1fr); column-gap: 8px; align-items: center; padding: 12px 16px; } .ds-sheet-h { padding: 10px 16px; background: #f3f5f4; font-size: 12.5px; font-weight: 600; color: #56635f; } .ds-sheet-h span:nth-child(2) { text-align: center; } .ds-sheet-r { border-top: 1px solid #d8dfdc; font-size: 15px; transition: opacity .3s; } .ds-sheet-r svg { margin: 0 auto; } .ds-sheet-r.ds-dim { opacity: .32; } .ds-sheet-n { display: flex; align-items: center; gap: 12px; font-weight: 500; color: #0e1714; } .ds-tile { width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; border: 1px solid #d8dfdc; background: #fff; } .ds-sheet-t { font-size: 13px; font-weight: 500; color: #0e1714; } .ds-sheet-t.ds-none { font-weight: 400; color: #56635f; }"
+    },
+    {
+      "name": "Sequence Diagram",
+      "kind": "custom",
+      "refersTo": "sequence-stage",
+      "description": "One real order across three lanes (Comprador, Servidor VOX, Gateway): dashed lifelines, numbered badges, arrows grey until in view then VOX green with a single mint-ringed pulse.",
+      "html": "<figure class=\"ds-seq\"><div class=\"ds-lanes\"><span>Comprador</span><span class=\"ds-vox\">Servidor VOX</span><span>Gateway</span></div><div class=\"ds-msgs\"><div class=\"ds-msg ds-lit\"><div class=\"ds-arrow\"><i></i><b>3</b></div><p><strong>Cria a cobrança com a chave da loja</strong>A chave fica guardada criptografada e só é aberta no servidor.</p></div><div class=\"ds-msg\"><div class=\"ds-arrow\"><i></i><b>4</b></div><p><strong>Envia o aviso de pagamento</strong>O aviso sozinho não aprova nada.</p></div></div><figcaption>Fluxo real de cada pedido no checkout do VOX.</figcaption></figure>",
+      "css": ".ds-seq { margin: 0; max-width: 460px; border-radius: 18px; border: 1px solid #d8dfdc; background: #fff; padding: 20px 24px 24px; font-family: Inter, system-ui, sans-serif; } .ds-lanes { display: grid; grid-template-columns: repeat(3,1fr); text-align: center; } .ds-lanes span { justify-self: center; border-radius: 10px; border: 1px solid #d8dfdc; padding: 6px 14px; font-size: 13.5px; font-weight: 600; color: #0e1714; white-space: nowrap; } .ds-lanes .ds-vox { border-color: #1f846e; } .ds-msgs { position: relative; margin-top: 8px; background-image: repeating-linear-gradient(to bottom,#d8dfdc 0 4px,transparent 4px 9px), repeating-linear-gradient(to bottom,#d8dfdc 0 4px,transparent 4px 9px), repeating-linear-gradient(to bottom,#d8dfdc 0 4px,transparent 4px 9px); background-size: 1px 100%; background-repeat: no-repeat; background-position: 16.66% 0, 50% 0, 83.33% 0; } .ds-msg { padding: 20px 0 24px; } .ds-arrow { position: relative; height: 24px; } .ds-arrow i { position: absolute; top: 50%; left: 50%; width: 33.33%; height: 1px; background: #b9c4c0; transition: background-color .5s; } .ds-arrow b { position: absolute; top: 50%; left: 50%; display: flex; width: 20px; height: 20px; align-items: center; justify-content: center; transform: translate(-50%,-50%); border-radius: 999px; background: #f3f5f4; box-shadow: 0 0 0 1px #b9c4c0; font-size: 10.5px; font-weight: 700; font-variant-numeric: tabular-nums; color: #56635f; transition: background-color .5s, color .5s; } .ds-lit .ds-arrow i { background: #1f846e; } .ds-lit .ds-arrow b { background: #1f846e; box-shadow: none; color: #fff; } .ds-msg p { margin: 8px 0 0 50%; width: 33.33%; padding: 0 12px; font-size: 13.5px; line-height: 1.625; color: #56635f; } .ds-msg strong { display: block; margin-bottom: 4px; font-size: 14.5px; font-weight: 600; line-height: 1.375; color: #56635f; transition: color .5s; } .ds-lit strong { color: #0e1714; } .ds-seq figcaption { margin-top: 16px; font-size: 12.5px; color: #56635f; }"
+    },
+    {
+      "name": "Closing Band",
+      "kind": "card",
+      "refersTo": "closing-band",
+      "description": "Graphite band with wall-scale logo echo rings, white closing headline and the primary button.",
+      "html": "<section class=\"ds-band\"><svg class=\"ds-rings\" viewBox=\"0 0 600 400\" aria-hidden=\"true\"><circle cx=\"220\" cy=\"200\" r=\"170\" fill=\"none\" stroke=\"#22BF9D\" stroke-opacity=\".3\" stroke-width=\"1.5\"/><circle cx=\"290\" cy=\"200\" r=\"170\" fill=\"none\" stroke=\"#22BF9D\" stroke-opacity=\".24\" stroke-width=\"1.5\"/><circle cx=\"360\" cy=\"200\" r=\"170\" fill=\"none\" stroke=\"#22BF9D\" stroke-opacity=\".18\" stroke-width=\"1.5\"/><circle cx=\"430\" cy=\"200\" r=\"170\" fill=\"none\" stroke=\"#22BF9D\" stroke-opacity=\".12\" stroke-width=\"1.5\"/></svg><h2>Seu checkout, no seu domínio.</h2><p>Crie a conta, conecte a Shopify e o gateway.</p><a class=\"ds-band-cta\" href=\"#\">Criar conta grátis</a></section>",
+      "css": ".ds-band { position: relative; overflow: hidden; background: #0e1714; color: #fff; padding: 56px 32px; border-radius: 0; font-family: Inter, system-ui, sans-serif; } .ds-rings { position: absolute; right: -120px; top: 50%; width: 600px; transform: translateY(-50%); pointer-events: none; } .ds-band h2 { position: relative; max-width: 16ch; margin: 0; font: 800 44px/0.98 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.04em; } .ds-band p { position: relative; margin: 20px 0 0; max-width: 32rem; font-size: 17px; line-height: 1.625; color: #a9bdb7; } .ds-band-cta { position: relative; display: inline-flex; margin-top: 32px; border-radius: 10px; background: #1f846e; color: #fff; padding: 0.9rem 1.35rem; font-size: 15px; font-weight: 600; text-decoration: none; transition: background-color .2s, transform .25s cubic-bezier(0.22,1,0.36,1); } .ds-band-cta:hover { background: #186d5a; transform: translateY(-1px); } .ds-band-cta:focus-visible { outline: 2px solid #1f846e; outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Central de operações",
+    "overview": "The public surface is the control room that keeps each store's checkout running. It is light, institutional and exact: a cool paper ground ruled with a fine technical grid, white instrument panels edged with a single hairline, and graphite headlines in a heavy, tightly tracked grotesque. Its proof is a live route diagram (Shopify → your checkout → Pix and card branches, each with an active and a configured gateway, real logos) where the visitor blocks a gateway and then switches it in two explicit steps, exactly as the merchant would in the panel.\n\nBelow the hero the page reads as living technical documentation, never as cards: an activation line whose stations carry the panel's real status names, a technical sheet of the gateway network that says how each one captures the card, and a sequence diagram of one order showing where each security guarantee happens. Each is drawn from the real product (`conteudo.ts`, the panel, the payment routes) and lights up as the visitor reaches it.\n\nColor is rationed like status lights on a console. VOX green is the only color that means \"act\", \"active\" or \"done\"; mint appears only as the glow of the pulses travelling a route; burnt orange appears only when a gateway is blocked. Everything else is paper, white, graphite and grey. The logo's echo rings are the structural geometry: concentric circles around the checkout node in the diagram, and the same rings at wall scale in the graphite closing band.",
+    "keyCharacteristics": [
+      "Cool paper ground with a 48px technical grid on the hero; white surfaces with 1px hairlines everywhere else.",
+      "Graphite Bricolage Grotesque 800 headlines at -0.04em carry the page; Inter body stays calm in grey.",
+      "One action/status color (VOX green), one light (mint, pulses only), one alarm (burnt orange, \"bloqueada\" only).",
+      "Lists, tables, rails and diagrams instead of feature cards; only the hero diagram floats.",
+      "Serious 10px corners on every control, 8px on chips; no pills for actions.",
+      "Logo echo rings as concentric scaffold; graphite closing band to end the page.",
+      "Motion is functional (pulses, route redraw, a short shake on block, a scroll-drawn rail, arrows lighting in sequence) and fully gated on `prefers-reduced-motion`; content is server-rendered, lit and readable without JS."
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "VOX green is the only color that means \"act\", \"active\" or \"done\". No second accent, no green gradients, no green for decoration beyond the logo rings.", "section": "colors" },
+      { "name": "The Mint Is Light Rule", "body": "Mint appears only as the glow of a moving pulse. Never as a fill, text, border or button.", "section": "colors" },
+      { "name": "The Alarm Rule", "body": "Burnt orange exists for one state, a blocked gateway. It is never used for emphasis, errors elsewhere on the page, or decoration.", "section": "colors" },
+      { "name": "The Weight Carries It Rule", "body": "Hierarchy comes from Bricolage weight and size with negative tracking. Labels are sentence case and never tracked out.", "section": "typography" },
+      { "name": "The Tabular Figures Rule", "body": "Every counted figure, count and step number uses tabular numerals.", "section": "typography" },
+      { "name": "The Lit By Default Rule", "body": "Server HTML, no-JS and reduced motion show every station, arrow and guarantee lit and every chip in its done state. Progressive lighting is applied only after mount, only where it can be followed (the guarantees light step by step only at lg, where their column is sticky beside the diagram), and never hides content.", "section": "layout" },
+      { "name": "The Instruments Only Rule", "body": "Only the hero diagram, the primary button and the active segment indicator are raised. Content sections, the gateway sheet and the sequence diagram never get shadows or cards.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep VOX Green (`#1f846e`) as the only action and \"active\" color; one primary button per view region.",
+      "Do confine mint to pulse halos and burnt orange to the blocked state (The Mint Is Light Rule, The Alarm Rule).",
+      "Do take every figure from `conteudo.ts` (real data); set figures and step numbers in tabular numerals, growing inside a sentence rather than in a metrics grid.",
+      "Do depict the gateway switch as a manual action the merchant takes in the panel, in explicit user-driven steps.",
+      "Do use the panel's real status names, onboarding steps and payment flow when the page shows product state; describe only what the code does.",
+      "Do label every demonstration as such, in a plain sentence-case caption.",
+      "Do use 10px corners on every control, 8px on chips, and 1px Hairline (`#d8dfdc`) rules to separate sections, rows and items.",
+      "Do use the logo's echo rings as concentric structure, not as scattered decoration.",
+      "Do gate every looping, scroll-driven or entrance animation on `prefers-reduced-motion` and keep all content lit and visible without JS (The Lit By Default Rule).",
+      "Do draw icons as single-stroke inline SVG (1.6 to 2.4px, round caps and joins)."
+    ],
+    "donts": [
+      "Don't invent statistics, testimonials, client logos or ratings; a figure not in `conteudo.ts` does not appear.",
+      "Don't depict or claim automatic failover, self-healing routes or detection of a gateway outage; routing does not detect outages and switching is always the merchant's manual action.",
+      "Don't show an unlabeled demonstration, or a phone/checkout mockup as the hero proof.",
+      "Don't wrap features in bordered card grids; use rules, lists, tables, rails and diagrams.",
+      "Don't use pill-shaped buttons or filter pills, or hard offset shadows.",
+      "Don't add uppercase tracked eyebrows or kickers above headlines.",
+      "Don't add an institutional company section (CNPJ, contact, terms) until the owner opens the new CNPJ.",
+      "Don't bring the panel's `--c-*` tokens into this surface, or these `--l-*` tokens into the panel, admin or checkout; `.landing` scoping keeps them apart."
+    ]
+  }
+}

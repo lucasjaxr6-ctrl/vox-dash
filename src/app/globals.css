@@ -1,0 +1,228 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #ffffff;
+}
+
+html,
+body {
+  background: #ffffff;
+  color: #1f2937;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Esconde as setas dos inputs number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   PAINEL — tokens semânticos de tema. Escopado em .panel-root para NÃO
+   afetar o checkout do cliente, que continua sempre claro.
+   O padrão é DARK; html[data-theme="light"] troca para o tema claro.
+   Componentes usam bg-card / text-hi / border-line etc. (tailwind.config),
+   então nenhuma tela precisa saber qual tema está ativo.
+   ───────────────────────────────────────────────────────────────────────── */
+.panel-root {
+  color-scheme: dark;
+
+  --c-app: #090a0c;
+  --c-card: #111215;
+  --c-soft: #17181c;
+  --c-raised: #1c1e22;
+
+  --c-line: rgba(255, 255, 255, 0.07);
+  --c-line-strong: rgba(255, 255, 255, 0.14);
+  --c-hover: rgba(255, 255, 255, 0.045);
+
+  --c-text-hi: #f3f4f6;
+  --c-text-mid: #c7cbd2;
+  --c-text-low: #99a0aa;
+  --c-text-dim: #6e757f;
+
+  --s-panel: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --s-panel-hover: 0 1px 2px rgba(0, 0, 0, 0.6), 0 16px 36px -16px rgba(0, 0, 0, 0.85);
+
+  /* Brilho da cor do painel. Estava escrito à mão como rgba(255,90,31,...) em
+     cinco telas; trocar a marca deixava os cinco no tom antigo. Aqui é token. */
+  --c-brand-glow: rgba(34, 191, 157, 0.9);
+
+  /* Cores dos GRÁFICOS. Cada uma pertence a uma coisa só e segue essa coisa em
+     toda tela: Pix é sempre verde-azulado, cartão é sempre índigo.
+     Pix e cartão passaram no validador de paleta (daltonismo, luminância e
+     contraste) contra o card dos dois temas. O verde da marca (--viz-accent) fica só no funil, que não tem Pix ao lado:
+     os dois verdes são quase iguais e nunca podem dividir o mesmo gráfico. */
+  --viz-pix: #0d9488;
+  --viz-card: #6366f1;
+  --viz-ink: #c9ced6;
+  --viz-mid: #6b7480;
+  --viz-quiet: #30353d;
+  --viz-accent: #23a688;
+  --viz-device: #38bdf8;
+}
+
+html[data-theme="light"] .panel-root {
+  color-scheme: light;
+
+  --c-app: #f6f7f9;
+  --c-card: #ffffff;
+  --c-soft: #f2f4f7;
+  --c-raised: #ffffff;
+
+  --c-line: rgba(16, 24, 40, 0.09);
+  --c-line-strong: rgba(16, 24, 40, 0.17);
+  --c-hover: rgba(16, 24, 40, 0.04);
+
+  --c-text-hi: #101828;
+  --c-text-mid: #475467;
+  --c-text-low: #667085;
+  --c-text-dim: #98a2b3;
+
+  --s-panel: 0 1px 2px rgba(16, 24, 40, 0.05), 0 6px 18px -10px rgba(16, 24, 40, 0.16);
+  --s-panel-hover: 0 1px 3px rgba(16, 24, 40, 0.08), 0 14px 32px -14px rgba(16, 24, 40, 0.24);
+
+  --viz-ink: #344054;
+  --viz-mid: #98a2b3;
+  --viz-quiet: #cbd1da;
+  --viz-accent: #1f846e;
+  --viz-device: #0284c7;
+}
+
+/* Valor em reais em tamanho de destaque: o "R$" e os centavos descem de
+   tamanho e de tom, e o olho cai direto na parte inteira. */
+.panel-root .num-cur {
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--c-text-low);
+  margin-right: 0.2em;
+}
+.panel-root .num-dec {
+  font-size: 0.55em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--c-text-low);
+}
+
+/* No painel, o fundo da página acompanha o tema: arrastar a tela no celular
+   (ou puxar além do fim) mostrava o branco do body por trás do painel escuro.
+   E nada pode alargar a página para o lado — se algum conteúdo passar da
+   borda, é cortado aqui em vez de criar rolagem horizontal. */
+body:has(.panel-root) {
+  background: #090a0c;
+}
+html[data-theme="light"] body:has(.panel-root) {
+  background: #f6f7f9;
+}
+.panel-root {
+  overflow-x: clip;
+}
+
+.panel-root ::selection {
+  background: rgba(31, 132, 110, 0.28);
+}
+
+.panel-root ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.panel-root ::-webkit-scrollbar-track {
+  background: transparent;
+}
+.panel-root ::-webkit-scrollbar-thumb {
+  background: var(--c-line-strong);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+.panel-root ::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-dim);
+  background-clip: content-box;
+}
+
+/* Calendário nativo legível no escuro (no claro fica o ícone padrão) */
+.panel-root input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
+  cursor: pointer;
+}
+html[data-theme="light"] .panel-root input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+  opacity: 0.6;
+}
+.panel-root input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 0.9;
+}
+
+/* Autofill do Chrome não pode quebrar o tema */
+.panel-root input:-webkit-autofill,
+.panel-root input:-webkit-autofill:hover,
+.panel-root input:-webkit-autofill:focus,
+.panel-root select:-webkit-autofill {
+  -webkit-text-fill-color: var(--c-text-hi);
+  -webkit-box-shadow: 0 0 0 1000px var(--c-soft) inset;
+  caret-color: var(--c-text-hi);
+}
+
+/* Credencial já salva: o campo vazio mostra pontos na cor do texto, como uma
+   senha oculta. Digitar troca a credencial; deixar em branco mantém a salva. */
+.panel-root input[placeholder^="••••"]::placeholder {
+  color: var(--c-text-hi);
+  opacity: 1;
+  letter-spacing: 0.08em;
+}
+/* Ao clicar, os pontos SOMEM. Eles são só a marca de "tem chave salva", nunca
+   o valor: sem isto o lojista via os pontos com o cursor no começo, achava que
+   a chave antiga continuava no campo e que colar a nova ia somar as duas. O
+   campo vazio deixa claro que o que for colado substitui a salva. */
+.panel-root input[placeholder^="••••"]:focus::placeholder {
+  color: transparent;
+}
+
+/* Seletor de gateway (GatewayPicker): a lista cresce a partir do botão. */
+@keyframes gp-abrir {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+}
+
+/* Janela do Pix: o fundo escurece e o quadro sobe já crescendo, sem "pulo". */
+@keyframes pix-fundo {
+  from { opacity: 0; }
+}
+@keyframes pix-janela {
+  from { opacity: 0; transform: translateY(10px) scale(0.97); }
+}
+
+/* Respeita quem pediu menos animação */
+@media (prefers-reduced-motion: reduce) {
+  .panel-root *,
+  .panel-root *::before,
+  .panel-root *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Admin inherits the merchant panel tokens without changing checkout styling. */
+.admin-root :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background-color: var(--c-soft);
+  color: var(--c-text-hi);
+  caret-color: #1f846e;
+  max-width: 100%;
+}
+.admin-root :is(input, textarea)::placeholder { color: var(--c-text-low); }
+.admin-root :is(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid #1f846e;
+  outline-offset: 3px;
+}
+.admin-root table { font-variant-numeric: tabular-nums; }
+.admin-root th { white-space: nowrap; }
+.admin-root td { vertical-align: middle; }
+.admin-root a.text-brand { color: var(--viz-accent); }
+/* O seletor de período fica de fora: a pílula é uma segunda fileira de rótulos
+   por cima, e um item mais grosso que ela desalinharia o texto. */
+.admin-root :is(button, a)[aria-current="page"]:not([data-pill]) { font-weight: 600; }

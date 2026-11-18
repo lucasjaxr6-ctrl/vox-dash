@@ -1,0 +1,15 @@
+node_modules
+.next
+.env
+.env.local
+*.log
+.DS_Store
+/prisma/*.db
+
+# Certificado do banco (Aiven) e chaves
+ca.pem
+*.pem
+
+# Dados de produção e diagnósticos
+recovery/
+*.tsbuildinfo
