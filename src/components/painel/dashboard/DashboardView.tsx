@@ -59,11 +59,11 @@ export default function DashboardView({ data }: { data: DashboardData }) {
 
   return (
     <PeriodTransition>
-      <div className="animate-fade-up">
+      <div className="animate-fade-up space-y-6">
         <ReconcileOnMount />
 
-        <header className="pb-5">
-          <h1 className="text-[22px] font-semibold tracking-tight text-hi">Dashboard</h1>
+        <header className="pb-1">
+          <h1 className="text-[26px] font-semibold tracking-tight text-hi">Dashboard</h1>
           <p className="mt-1 truncate text-[13px] text-low">
             <span className="font-medium text-mid">{data.storeName}</span>
             <span aria-hidden className="mx-1.5 text-dim">·</span>
@@ -74,16 +74,18 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         {/* ── Agora ── */}
         <LiveVisitors variant="strip" />
 
-        {/* ── Filtro de período: governa todas as seções abaixo ── */}
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-line pt-6">
-          <p className="text-[12.5px] text-low">
-            Período das seções abaixo: <span className="font-medium text-mid">{data.period.label}</span>
+        {/* ── Filtro de período: governa todas as caixas abaixo ── */}
+        <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-[22px] bg-card px-5 py-3.5 ring-1 ring-line">
+          <p className="flex items-center gap-2 text-[13px] text-low">
+            <Icon name="calendar" />
+            Período das seções abaixo
+            <span className="rounded-full bg-soft px-2.5 py-0.5 text-[12px] font-medium text-hi ring-1 ring-line">{data.period.label}</span>
           </p>
           <PeriodControl active={data.period.key} from={data.period.from} to={data.period.to} />
         </div>
 
         {/* ── Resultado ── */}
-        <Section title="Resultado" question="Quanto vendi">
+        <Box icon="cash" title="Resultado" question="Quanto vendi" link={{ href: "/painel/vendas", label: "Ver vendas" }}>
           <PendingArea>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)]">
               <Kpi
@@ -106,64 +108,67 @@ export default function DashboardView({ data }: { data: DashboardData }) {
               />
             </div>
           </PendingArea>
-        </Section>
+        </Box>
 
         {/* ── Conversão: a taxa ao lado do funil que a explica ── */}
-        <Section title="Conversão" question="Onde perco clientes">
+        <Box icon="funnel" title="Conversão" question="Onde perco clientes">
           <PendingArea>
-            <section className="grid min-w-0 gap-6 rounded-2xl bg-card p-5 lg:grid-cols-[200px_minmax(0,1fr)]">
-              <div className="min-w-0 lg:border-r lg:border-line lg:pr-6">
+            <div className="grid gap-4 lg:grid-cols-[230px_minmax(0,1fr)]">
+              <div className="flex min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
                 <span className="text-[13px] font-medium text-low" title="Quem comprou ÷ quem chegou ao checkout no período">
                   Taxa de conversão
                 </span>
-                <div className="mt-3 whitespace-nowrap text-[30px] font-semibold leading-none tracking-[-0.025em] text-hi">
+                <div className="mt-4 whitespace-nowrap text-[36px] font-semibold leading-none tracking-[-0.03em] text-hi">
                   {conversion === null ? "—" : <AnimatedNumber value={conversion} format="pct" />}
                 </div>
-                <p className="mt-2.5 text-[12.5px] text-low">{base > 0 ? `de ${base} no checkout` : "Nenhum checkout"}</p>
-                <p className="mt-3 text-[11.5px] leading-snug text-dim">Quem comprou ÷ quem chegou ao checkout no período</p>
+                <p className="mt-3 text-[12.5px] text-low">{base > 0 ? `de ${base} no checkout` : "Nenhum checkout"}</p>
+                <p className="mt-auto border-t border-line pt-4 text-[11.5px] leading-snug text-dim">
+                  Quem comprou ÷ quem chegou ao checkout no período
+                </p>
               </div>
-              <div className="min-w-0">
-                <h2 className="text-[14px] font-semibold text-hi">Funil do checkout</h2>
+              <div className="min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
+                <h3 className="text-[14px] font-semibold text-hi">Funil do checkout</h3>
                 <p className="mt-0.5 text-[12.5px] text-low">Até onde foi quem chegou ao checkout</p>
-                <div className="mt-5">
+                <div className="mt-6">
                   <Funnel stages={data.funnel} />
                   {base === 0 && <p className="mt-4 text-[12.5px] text-low">Nenhum checkout iniciado no período.</p>}
                 </div>
               </div>
-            </section>
+            </div>
           </PendingArea>
-        </Section>
+        </Box>
 
         {/* ── Recuperação: dinheiro parado e o que voltou ── */}
-        <Section title="Recuperação" question="O que ainda dá para salvar">
+        <Box icon="refresh" title="Recuperação" question="O que ainda dá para salvar" link={{ href: "/painel/carrinhos", label: "Ver carrinhos" }}>
           <PendingArea>
-            <section className="rounded-2xl bg-card p-5">
-              <h2 className="sr-only">Recuperação de vendas</h2>
-              <div className="grid gap-x-10 gap-y-8 md:grid-cols-3">
-                <Recovery
-                  title="Pendentes"
-                  cents={pending.cents}
-                  note={`${pending.count} ${plural(pending.count, "pedido aguardando", "pedidos aguardando")}`}
-                  detail={pending.count > 0 ? `Pix ${brl(pending.pixCents)} · Cartão ${brl(pending.cardCents)}` : undefined}
-                />
-                <Recovery
-                  title="Carrinhos abandonados"
-                  cents={abandoned.cents}
-                  note={`${abandoned.count} ${plural(abandoned.count, "carrinho", "carrinhos")}`}
-                />
-                <Recovery
-                  title="Recuperadas"
-                  cents={recovered.cents}
-                  note={`${recovered.count} ${plural(recovered.count, "venda voltou", "vendas voltaram")}`}
-                  detail={recovered.count > 0 ? `De carrinho ${brl(recovered.cartCents)} · De Pix ${brl(recovered.pixCents)}` : undefined}
-                />
-              </div>
-            </section>
+            <h3 className="sr-only">Recuperação de vendas</h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Recovery
+                title="Pendentes"
+                tone="warn"
+                cents={pending.cents}
+                note={`${pending.count} ${plural(pending.count, "pedido aguardando", "pedidos aguardando")}`}
+                detail={pending.count > 0 ? `Pix ${brl(pending.pixCents)} · Cartão ${brl(pending.cardCents)}` : undefined}
+              />
+              <Recovery
+                title="Carrinhos abandonados"
+                tone="lost"
+                cents={abandoned.cents}
+                note={`${abandoned.count} ${plural(abandoned.count, "carrinho", "carrinhos")}`}
+              />
+              <Recovery
+                title="Recuperadas"
+                tone="ok"
+                cents={recovered.cents}
+                note={`${recovered.count} ${plural(recovered.count, "venda voltou", "vendas voltaram")}`}
+                detail={recovered.count > 0 ? `De carrinho ${brl(recovered.cartCents)} · De Pix ${brl(recovered.pixCents)}` : undefined}
+              />
+            </div>
           </PendingArea>
-        </Section>
+        </Box>
 
         {/* ── Como compram: meio de pagamento e aparelho ── */}
-        <Section title="Como compram" question="Meio de pagamento e aparelho">
+        <Box icon="device" title="Como compram" question="Meio de pagamento e aparelho">
           <PendingArea>
             <div className="grid gap-4 xl:grid-cols-2">
               <Card title="Formas de pagamento">
@@ -201,14 +206,16 @@ export default function DashboardView({ data }: { data: DashboardData }) {
               </Card>
             </div>
           </PendingArea>
-        </Section>
+        </Box>
 
         {/* ── Últimos pedidos ── */}
-        <Section title="Pedidos recentes" question="Os últimos do período">
+        <Box icon="list" title="Pedidos recentes" question="Os últimos do período" link={{ href: "/painel/vendas", label: "Ver todas" }}>
           <PendingArea>
-            <RecentOrders orders={data.recent} />
+            <div className="rounded-2xl bg-soft px-1.5 py-1 ring-1 ring-line sm:px-3">
+              <RecentOrders orders={data.recent} bare />
+            </div>
           </PendingArea>
-        </Section>
+        </Box>
       </div>
     </PeriodTransition>
   );
@@ -217,16 +224,63 @@ export default function DashboardView({ data }: { data: DashboardData }) {
 const brlFmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const brl = (cents: number) => brlFmt.format(cents / 100);
 
-/** Cabeçalho de seção: nome + a pergunta que ela responde. */
-function Section({ title, question, children }: { title: string; question: string; children: React.ReactNode }) {
+const ICONS: Record<string, React.ReactNode> = {
+  calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18" /></>,
+  cash: <><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6 12h.01M18 12h.01" /></>,
+  funnel: <path d="M4 4h16l-6 8v6l-4 2v-8z" />,
+  refresh: <><path d="M20 11A8 8 0 0 0 6.3 6.3L4 8.5" /><path d="M4 4v4.5h4.5" /><path d="M4 13a8 8 0 0 0 13.7 4.7L20 15.5" /><path d="M20 20v-4.5h-4.5" /></>,
+  device: <><rect x="7" y="2" width="10" height="20" rx="2" /><path d="M11 18h2" /></>,
+  list: <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />,
+};
+
+function Icon({ name, size = 16 }: { name: string; size?: number }) {
   return (
-    <div className="mt-8">
-      <div className="mb-3 flex items-baseline gap-2">
-        <h2 className="text-[12px] font-semibold uppercase tracking-[0.06em] text-mid">{title}</h2>
-        <span className="text-[12px] text-dim">· {question}</span>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
+      {ICONS[name]}
+    </svg>
+  );
+}
+
+/** Caixa de seção: um bloco por assunto, com cabeçalho próprio e os cartões dentro. */
+function Box({
+  icon,
+  title,
+  question,
+  link,
+  children,
+}: {
+  icon: string;
+  title: string;
+  question: string;
+  link?: { href: string; label: string };
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="min-w-0 rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7">
+      <div className="mb-5 flex items-center justify-between gap-4 px-1.5 pt-1.5 sm:mb-6 sm:px-0 sm:pt-0">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft text-mid ring-1 ring-line">
+            <Icon name={icon} size={18} />
+          </span>
+          <div className="min-w-0">
+            <h2 className="text-[16px] font-semibold tracking-tight text-hi">{title}</h2>
+            <p className="mt-0.5 text-[12.5px] leading-snug text-low">{question}</p>
+          </div>
+        </div>
+        {link && (
+          <Link
+            href={link.href}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-soft px-3.5 py-2 text-[12.5px] font-medium text-mid ring-1 ring-line transition-colors hover:text-hi focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
+          >
+            {link.label}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M7 17L17 7M9 7h8v8" />
+            </svg>
+          </Link>
+        )}
       </div>
       {children}
-    </div>
+    </section>
   );
 }
 
@@ -245,7 +299,7 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <section className={`flex min-w-0 flex-col rounded-2xl bg-card p-5 ${className}`}>
+    <section className={`flex min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5 ${className}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-[14px] font-semibold text-hi">{title}</h2>
@@ -294,12 +348,12 @@ function Kpi({
       <div className="mt-2.5 truncate text-[12.5px] text-low">{note}</div>
     </>
   );
-  const cls = `group block min-w-0 rounded-2xl bg-card p-5 ${className}`;
+  const cls = `group block min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5 ${className}`;
   if (href) {
     return (
       <Link
         href={href}
-        className={`${cls} transition-colors duration-150 hover:bg-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40`}
+        className={`${cls} transition-colors duration-150 hover:ring-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40`}
       >
         {body}
       </Link>
@@ -314,8 +368,10 @@ function Recovery({
   cents,
   note,
   detail,
+  tone = "ok",
   link,
 }: {
+  tone?: "warn" | "lost" | "ok";
   title: string;
   cents: number;
   note: string;
@@ -323,9 +379,12 @@ function Recovery({
   link?: { href: string; label: string };
 }) {
   return (
-    <div className="flex min-w-0 flex-col">
-      <h3 className="text-[13px] font-medium text-low">{title}</h3>
-      <p className="mt-2 whitespace-nowrap text-[24px] font-semibold leading-none tracking-[-0.025em] text-hi">
+    <div className="flex min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
+      <h3 className="flex items-center gap-2 text-[13px] font-medium text-low">
+        <span aria-hidden className={`h-2 w-2 rounded-full ${tone === "warn" ? "bg-amber-400" : tone === "lost" ? "bg-rose-400" : "bg-emerald-500"}`} />
+        {title}
+      </h3>
+      <p className="mt-3 whitespace-nowrap text-[26px] font-semibold leading-none tracking-[-0.025em] text-hi">
         <AnimatedNumber value={cents} format="brl" display />
       </p>
       <p className="mt-2 text-[12.5px] text-low">{note}</p>

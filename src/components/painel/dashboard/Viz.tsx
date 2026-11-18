@@ -221,7 +221,7 @@ export function Funnel({ stages }: { stages: FunnelStage[] }) {
       <div className="mt-3 grid gap-x-1" style={cols} aria-hidden>
         {steps.map((s, i) => (
           <div key={s.label} className="min-w-0 text-center" title={s.label}>
-            <div className="whitespace-nowrap text-[12.5px] font-medium text-mid">{s.short ?? s.label}</div>
+            <div className="truncate text-[11px] font-medium text-mid sm:text-[12.5px]">{s.short ?? s.label}</div>
             <div className="mt-0.5 text-[12px] tabular-nums text-low">
               {base > 0 ? <AnimatedNumber value={s.pct} format="pct" /> : "—"}
             </div>

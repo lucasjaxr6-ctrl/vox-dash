@@ -62,34 +62,39 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
 
   if (variant === "strip") {
     return (
-      <section className={`min-w-0 rounded-2xl bg-card px-5 py-4 ring-1 ring-emerald-500/20 ${className}`} aria-label="Visitantes ao vivo">
-        <div className="mb-3 flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="text-[14px] font-semibold text-hi">Visitantes ao vivo</h2>
-            <p className="mt-0.5 text-[12.5px] text-low">Atualiza a cada 5 segundos · não segue o período</p>
+      <section className={`min-w-0 rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7 ${className}`} aria-label="Visitantes ao vivo">
+        <div className="flex items-start justify-between gap-4 px-1.5 pt-1.5 sm:px-0 sm:pt-0">
+          <div className="flex min-w-0 items-center gap-3">
+            <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft ring-1 ring-line">
+              <span className={`h-2.5 w-2.5 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
+            </span>
+            <div className="min-w-0">
+              <h2 className="text-[16px] font-semibold tracking-tight text-hi">Visitantes ao vivo</h2>
+              <p className="mt-0.5 text-[12.5px] text-low">Atualiza a cada 5 segundos · não segue o período</p>
+            </div>
           </div>
-          <span className="flex shrink-0 items-center gap-1.5 text-[12px] font-medium text-low">
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-soft px-3 py-1.5 text-[12px] font-medium text-mid ring-1 ring-line">
             <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
             Agora
           </span>
         </div>
-        <div className="grid gap-x-8 gap-y-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <div className="min-w-0">
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
             <h3 className="text-[12.5px] font-medium text-low">Agora na loja</h3>
-            <dl className="mt-2 grid grid-cols-3 gap-2">
-              <LiveFigure size="sm" label="Online" value={online} loading={loading} />
-              <LiveFigure size="sm" label="Na loja" value={loja} loading={loading} share={online > 0 ? share(loja) : null} />
-              <LiveFigure size="sm" label="No checkout" value={checkout} loading={loading} share={online > 0 ? share(checkout) : null} />
+            <dl className="mt-3 grid grid-cols-3 gap-2">
+              <LiveFigure label="Online" value={online} loading={loading} />
+              <LiveFigure label="Na loja" value={loja} loading={loading} share={online > 0 ? share(loja) : null} />
+              <LiveFigure label="No checkout" value={checkout} loading={loading} share={online > 0 ? share(checkout) : null} />
             </dl>
           </div>
-          <div className="min-w-0 border-t border-line pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+          <div className="min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
             <h3 className="flex items-baseline justify-between gap-2 text-[12.5px] font-medium text-low">
               No checkout agora
               <span className="hidden text-[11.5px] font-normal text-dim sm:inline">mesmas etapas do funil</span>
             </h3>
-            <dl className="mt-2 grid grid-cols-3 gap-2">
+            <dl className="mt-3 grid grid-cols-3 gap-2">
               {steps.map((s) => (
-                <LiveFigure size="sm" key={s.label} label={s.label} value={s.n} loading={loading} share={checkout > 0 ? inCheckout(s.n) : null} />
+                <LiveFigure key={s.label} label={s.label} value={s.n} loading={loading} share={checkout > 0 ? inCheckout(s.n) : null} />
               ))}
             </dl>
           </div>

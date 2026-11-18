@@ -45,20 +45,24 @@ function when(value: Date | string) {
 }
 
 // Últimos pedidos do período. Cada linha abre o pedido.
-export default function RecentOrders({ orders }: { orders: RecentOrder[] }) {
+// `bare`: sem cartão nem cabeçalho próprios — usado dentro da caixa da seção
+// "Pedidos recentes" do dashboard, que já traz o título e o "Ver todas".
+export default function RecentOrders({ orders, bare = false }: { orders: RecentOrder[]; bare?: boolean }) {
   return (
-    <section className="rounded-2xl bg-card">
-      <div className="flex items-center justify-between gap-3 px-5 pb-2 pt-5">
-        <h2 className="text-[14px] font-semibold text-hi">Pedidos recentes</h2>
-        <TextLink href="/painel/vendas">Ver todas</TextLink>
-      </div>
+    <section className={bare ? "-mx-2" : "rounded-2xl bg-card"}>
+      {!bare && (
+        <div className="flex items-center justify-between gap-3 px-5 pb-2 pt-5">
+          <h2 className="text-[14px] font-semibold text-hi">Pedidos recentes</h2>
+          <TextLink href="/painel/vendas">Ver todas</TextLink>
+        </div>
+      )}
 
       {orders.length === 0 ? (
-        <p className="px-5 pb-6 pt-3 text-[12.5px] text-low">
+        <p className={`${bare ? "px-2 py-3" : "px-5 pb-6 pt-3"} text-[12.5px] text-low`}>
           Nenhum pedido no período. Eles aparecem aqui assim que chegarem.
         </p>
       ) : (
-        <ul className="px-2 pb-2">
+        <ul className={bare ? "divide-y divide-line" : "px-2 pb-2"}>
           {orders.map((o) => {
             const st = orderStatusBadge(o.status, o.paymentMethod);
             return (
