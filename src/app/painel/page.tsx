@@ -4,6 +4,7 @@ import { resolveRange, rangeClause, rangeLabel } from "@/lib/painel-range";
 import { abandonedCartsSql, recoveredOrdersSql } from "@/lib/abandoned-carts";
 import DashboardView, { type DashboardData } from "@/components/painel/dashboard/DashboardView";
 import { dashboardSeries } from "@/lib/dashboard-series";
+import { scoreConversao } from "@/lib/score-conversao";
 
 // A resolução de período vive em @/lib/painel-range (compartilhada com a tela
 // de Dispositivos), para as duas nunca discordarem do que é "7 dias".
@@ -186,11 +187,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const cardDecided = paidCardCount + Number(stats?.cardDeclined ?? 0);
 
   // Séries no tempo dos gráficos (período atual + anterior de mesmo tamanho).
-  const series = await dashboardSeries(store.id, activeKey, since, until);
+  const [series, score] = await Promise.all([dashboardSeries(store.id, activeKey, since, until), scoreConversao(store.id)]);
 
   const data: DashboardData = {
     storeName: store.name,
     series,
+    score,
     period: {
       key: activeKey,
       label: rangeLabel(activeKey, fromParam, toParam),

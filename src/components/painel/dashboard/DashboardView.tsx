@@ -7,6 +7,7 @@ import { Funnel, SplitHeader, SplitTile, TextLink, type SplitRow, type FunnelSta
 import MetricPanel from "./MetricPanel";
 import type { TrendSeries } from "./TrendChart";
 import type { SeriesBlock } from "@/lib/dashboard-series";
+import type { ScoreConversao } from "@/lib/score-conversao";
 import RecentOrders, { type RecentOrder } from "./RecentOrders";
 import LiveVisitors from "@/components/painel/LiveVisitors";
 import ReconcileOnMount from "@/components/painel/ReconcileOnMount";
@@ -15,6 +16,7 @@ import { IconeCartao, IconePix } from "@/components/painel/MetodoIcon";
 export type DashboardData = {
   storeName: string;
   series: SeriesBlock;
+  score: ScoreConversao;
   period: { key: string; label: string; from: string; to: string };
   paid: { cents: number; count: number; pixCents: number; pixCount: number; cardCents: number; cardCount: number };
   orders: { total: number; pending: number };
@@ -107,8 +109,11 @@ export default function DashboardView({ data }: { data: DashboardData }) {
           </p>
         </header>
 
-        {/* ── Agora ── */}
-        <LiveVisitors variant="strip" />
+        {/* ── Agora: score do checkout (30 dias) + visitantes ao vivo ── */}
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+          <ScoreBox s={data.score} />
+          <LiveVisitors variant="strip" className="h-full" />
+        </div>
 
         {/* ── Filtro de período: governa todas as caixas abaixo ── */}
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-[22px] bg-card px-5 py-3.5 ring-1 ring-line">
@@ -325,6 +330,7 @@ const brlFmt = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BR
 const brl = (cents: number) => brlFmt.format(cents / 100);
 
 const ICONS: Record<string, React.ReactNode> = {
+  gauge: <><path d="M4 15a8 8 0 1 1 16 0" /><path d="M12 15l4-5" /><circle cx="12" cy="15" r="1.2" /></>,
   calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 11h18" /></>,
   cash: <><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6 12h.01M18 12h.01" /></>,
   funnel: <path d="M4 4h16l-6 8v6l-4 2v-8z" />,
@@ -338,6 +344,83 @@ function Icon({ name, size = 16 }: { name: string; size?: number }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
       {ICONS[name]}
     </svg>
+  );
+}
+
+function faixa(score: number | null) {
+  if (score === null) return { label: "Sem dados", cor: "var(--c-text-dim)", cls: "bg-soft text-low" };
+  if (score >= 85) return { label: "Excelente", cor: "#10b981", cls: "bg-emerald-500/15 text-emerald-400" };
+  if (score >= 70) return { label: "Bom", cor: "#34d399", cls: "bg-emerald-500/15 text-emerald-400" };
+  if (score >= 40) return { label: "Médio", cor: "#f5b031", cls: "bg-amber-400/15 text-amber-400" };
+  return { label: "Baixo", cor: "#f47185", cls: "bg-rose-400/15 text-rose-400" };
+}
+
+/** Score de conversão do checkout: medidor de 0 a 100 e os três componentes. */
+function ScoreBox({ s }: { s: ScoreConversao }) {
+  const f = faixa(s.score);
+  const v = s.score ?? 0;
+  // Meio círculo: comprimento do arco = π·r.
+  const R = 52;
+  const L = Math.PI * R;
+  return (
+    <section className="flex min-w-0 flex-col rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7" aria-label="Score de conversão do checkout">
+      <div className="flex items-start justify-between gap-4 px-1.5 pt-1.5 sm:px-0 sm:pt-0">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft text-mid ring-1 ring-line">
+            <Icon name="gauge" size={18} />
+          </span>
+          <div className="min-w-0">
+            <h2 className="text-[16px] font-semibold tracking-tight text-hi">Score de conversão</h2>
+            <p className="mt-0.5 text-[12.5px] text-low">Checkout · últimos 30 dias</p>
+          </div>
+        </div>
+        <span className={`shrink-0 rounded-full px-3 py-1.5 text-[12px] font-semibold ${f.cls}`}>{f.label}</span>
+      </div>
+
+      <div className="mt-6 grid flex-1 items-center gap-5 rounded-2xl bg-soft p-4 ring-1 ring-line sm:grid-cols-[150px_minmax(0,1fr)] sm:p-5">
+        <div className="relative mx-auto w-[150px]" title="Nota de 0 a 100: soma dos três componentes ao lado">
+          <svg viewBox="0 0 132 76" className="block w-full" aria-hidden>
+            <path d={`M${66 - R},68 A${R},${R} 0 0 1 ${66 + R},68`} fill="none" stroke="var(--c-line-strong)" strokeWidth="10" strokeLinecap="round" />
+            <path
+              d={`M${66 - R},68 A${R},${R} 0 0 1 ${66 + R},68`}
+              fill="none"
+              stroke={f.cor}
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeDasharray={`${(v / 100) * L} ${L}`}
+              className="transition-[stroke-dasharray] duration-700"
+            />
+          </svg>
+          <div className="absolute inset-x-0 bottom-0 text-center">
+            <span className="text-[34px] font-semibold leading-none tracking-[-0.03em] text-hi">{s.score === null ? "—" : <AnimatedNumber value={s.score} />}</span>
+            <span className="text-[12px] text-low"> /100</span>
+          </div>
+        </div>
+
+        <ul className="min-w-0 space-y-2.5">
+          {s.componentes.map((c) => (
+            <li key={c.key} title={`${c.dica}. Meta: ${Math.round(c.meta * 100)}% (vale ${c.peso} pontos).`}>
+              <div className="flex items-baseline justify-between gap-3 text-[12.5px]">
+                <span className="truncate text-low">
+                  {c.label}
+                  <span aria-hidden className="ml-1 text-dim">ⓘ</span>
+                </span>
+                <span className="shrink-0 font-semibold tabular-nums text-hi">
+                  {c.taxa === null ? "—" : `${(c.taxa * 100).toLocaleString("pt-BR", { maximumFractionDigits: 1 })}%`}
+                </span>
+              </div>
+              <span aria-hidden className="relative mt-1.5 block h-1.5 overflow-hidden rounded-full bg-hover">
+                <span className="absolute inset-y-0 left-0 rounded-full transition-[width] duration-700" style={{ width: `${(c.pontos / c.peso) * 100}%`, background: f.cor }} />
+              </span>
+              <span className="mt-1 block text-right text-[11px] tabular-nums text-dim">
+                {Math.round(c.pontos)} de {c.peso} pts · meta {Math.round(c.meta * 100)}%
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      {s.score === null && <p className="mt-3 px-1.5 text-[12px] text-low">Nenhum checkout nos últimos 30 dias.</p>}
+    </section>
   );
 }
 

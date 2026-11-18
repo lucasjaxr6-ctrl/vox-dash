@@ -13,6 +13,7 @@ import EscolherPlano from "@/components/painel/EscolherPlano";
 import GuiaConfiguracao from "@/components/painel/GuiaConfiguracao";
 import CompletarCadastro from "@/components/painel/CompletarCadastro";
 import { situacaoCadastro } from "@/lib/merchant-profile";
+import { premiacaoDaConta, type Premiacao } from "@/lib/premiacao";
 import { headers } from "next/headers";
 import { onboardingConcluido, statusOnboarding } from "@/lib/onboarding";
 import { rotaPermitida, type EtapaRota } from "@/lib/onboarding-rotas";
@@ -179,6 +180,14 @@ export default async function PainelLayout({
     bloquearPagina = travado && !!rota && !rotaPermitida(rota, etapasGuia);
   }
 
+  // Barra de premiação do topo. Falha aqui não pode derrubar o painel.
+  let premiacao: Premiacao | null = null;
+  try {
+    premiacao = await premiacaoDaConta(userId!);
+  } catch {
+    premiacao = null;
+  }
+
   return (
     <>
       {/* Aplica o tema salvo ANTES da pintura (evita o flash do tema errado). */}
@@ -193,7 +202,7 @@ export default async function PainelLayout({
         {!suspensa && <Sidebar travado={travado} etapas={etapasGuia} />}
         <div className="flex min-w-0 flex-1 flex-col pt-[45px] lg:pt-0">
           <div className="hidden lg:block">
-            <Topbar userName={userName} userEmail={userEmail} />
+            <Topbar userName={userName} userEmail={userEmail} premiacao={premiacao} />
           </div>
           <main className="min-w-0 flex-1">
             <div className="mx-auto w-full max-w-[1600px] px-4 pb-14 pt-6 sm:px-6 lg:px-8 lg:pt-7">

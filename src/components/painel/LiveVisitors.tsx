@@ -62,7 +62,7 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
 
   if (variant === "strip") {
     return (
-      <section className={`min-w-0 rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7 ${className}`} aria-label="Visitantes ao vivo">
+      <section className={`flex min-w-0 flex-col rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7 ${className}`} aria-label="Visitantes ao vivo">
         <div className="flex items-start justify-between gap-4 px-1.5 pt-1.5 sm:px-0 sm:pt-0">
           <div className="flex min-w-0 items-center gap-3">
             <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft ring-1 ring-line">
@@ -78,8 +78,8 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
             Agora
           </span>
         </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-2">
-          <div className="min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
+        <div className="mt-6 grid flex-1 gap-4 md:grid-cols-2">
+          <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
             <h3 className="text-[12.5px] font-medium text-low">Agora na loja</h3>
             <dl className="mt-3 grid grid-cols-3 gap-2">
               <LiveFigure label="Online" value={online} loading={loading} />
@@ -87,10 +87,10 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
               <LiveFigure label="No checkout" value={checkout} loading={loading} share={online > 0 ? share(checkout) : null} />
             </dl>
           </div>
-          <div className="min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
+          <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
             <h3 className="flex items-baseline justify-between gap-2 text-[12.5px] font-medium text-low">
               No checkout agora
-              <span className="hidden text-[11.5px] font-normal text-dim sm:inline">mesmas etapas do funil</span>
+              <span className="hidden text-[11.5px] font-normal text-dim 2xl:inline">mesmas etapas do funil</span>
             </h3>
             <dl className="mt-3 grid grid-cols-3 gap-2">
               {steps.map((s) => (
