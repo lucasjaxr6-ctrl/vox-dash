@@ -114,25 +114,32 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 rounded-[22px] bg-card px-5 py-3.5 ring-1 ring-line">
           <p className="flex items-center gap-2 text-[13px] text-low">
             <Icon name="calendar" />
-            Período das seções abaixo
+            Período
             <span className="rounded-full bg-soft px-2.5 py-0.5 text-[12px] font-medium text-hi ring-1 ring-line">{data.period.label}</span>
           </p>
           <PeriodControl active={data.period.key} from={data.period.from} to={data.period.to} />
         </div>
 
         {/* ── Conversão: a taxa ao lado do funil que a explica ── */}
-        <Box icon="funnel" title="Conversão" question="Onde perco clientes">
+        <Box icon="funnel" title="Conversão">
           <PendingArea>
-            <div className="grid gap-4 lg:grid-cols-[230px_minmax(0,1fr)]">
-              <div className="flex min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
-                <span className="text-[13px] font-medium text-low" title="Quem comprou ÷ quem chegou ao checkout no período">
+            <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+              <div className="relative flex min-w-0 flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/20 via-emerald-500/[0.07] to-transparent p-5 ring-1 ring-emerald-500/35 sm:p-6">
+                <span className="text-[13px] font-semibold text-emerald-700 dark:text-emerald-300" title="Quem comprou ÷ quem chegou ao checkout no período">
                   Taxa de conversão
                 </span>
-                <div className="mt-4 whitespace-nowrap text-[36px] font-semibold leading-none tracking-[-0.03em] text-hi">
-                  {conversion === null ? "—" : <AnimatedNumber value={conversion} format="pct" />}
+                <div className="flex flex-1 flex-col justify-center py-5">
+                  <div className="whitespace-nowrap text-[64px] font-semibold leading-none tracking-[-0.04em] text-hi">
+                    {conversion === null ? "—" : <AnimatedNumber value={conversion} format="pct" />}
+                  </div>
+                  <p className="mt-3 text-[13.5px] text-mid">{base > 0 ? `${bought} de ${base} no checkout` : "Nenhum checkout"}</p>
+                  {conversion !== null && (
+                    <span aria-hidden className="relative mt-4 block h-1.5 overflow-hidden rounded-full bg-emerald-900/10 dark:bg-white/10">
+                      <span className="absolute inset-y-0 left-0 rounded-full bg-emerald-500 dark:bg-emerald-400" style={{ width: `${Math.min(100, conversion)}%` }} />
+                    </span>
+                  )}
                 </div>
-                <p className="mt-3 text-[12.5px] text-low">{base > 0 ? `de ${base} no checkout` : "Nenhum checkout"}</p>
-                <p className="mt-auto border-t border-line pt-4 text-[11.5px] leading-snug text-dim">
+                <p className="border-t border-emerald-500/20 pt-4 text-[11.5px] leading-snug text-low">
                   Quem comprou ÷ quem chegou ao checkout no período
                 </p>
               </div>
@@ -149,7 +156,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         </Box>
 
         {/* ── Resultado ── */}
-        <Box icon="cash" title="Resultado" question="Quanto vendi" link={{ href: "/painel/vendas", label: "Ver vendas" }}>
+        <Box icon="cash" title="Resultado" link={{ href: "/painel/vendas", label: "Ver vendas" }}>
           <PendingArea>
             <MetricPanel
               {...chart}
@@ -202,7 +209,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         </Box>
 
         {/* ── Recuperação: dinheiro parado e o que voltou ── */}
-        <Box icon="refresh" title="Recuperação" question="O que ainda dá para salvar" link={{ href: "/painel/carrinhos", label: "Ver carrinhos" }}>
+        <Box icon="refresh" title="Recuperação" link={{ href: "/painel/carrinhos", label: "Ver carrinhos" }}>
           <PendingArea>
             <h3 className="sr-only">Recuperação de vendas</h3>
             <MetricPanel
@@ -262,10 +269,10 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         </Box>
 
         {/* ── Como compram: meio de pagamento e aparelho ── */}
-        <Box icon="device" title="Como compram" question="Meio de pagamento e aparelho">
+        <Box icon="device" title="Como compram">
           <PendingArea>
             <div className="grid gap-4 xl:grid-cols-2">
-              <Card title="Formas de pagamento" subtitle="Por onde o dinheiro entrou">
+              <Card title="Formas de pagamento">
                 <SplitHeader rows={payRows} empty="Nenhuma venda paga no período." />
                 <div className="mt-5">
                   <MetricPanel
@@ -286,7 +293,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
 
               {/* Tablet entra em Mobile, e pedidos anteriores ao registro de
                   dispositivo ficam de fora — mesma regra da tela cheia. */}
-              <Card title="Dispositivos" subtitle="De onde o cliente comprou" link={{ href: "/painel/dispositivos", label: "Detalhes" }}>
+              <Card title="Dispositivos" link={{ href: "/painel/dispositivos", label: "Detalhes" }}>
                 <SplitHeader rows={devRows} empty="Nenhuma venda paga no período." />
                 <div className="mt-5">
                   <MetricPanel
@@ -309,7 +316,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         </Box>
 
         {/* ── Últimos pedidos ── */}
-        <Box icon="list" title="Pedidos recentes" question="Os últimos do período" link={{ href: "/painel/vendas", label: "Ver todas" }}>
+        <Box icon="list" title="Pedidos recentes" link={{ href: "/painel/vendas", label: "Ver todas" }}>
           <PendingArea>
             <div className="rounded-2xl bg-soft px-1.5 py-1 ring-1 ring-line sm:px-3">
               <RecentOrders orders={data.recent} bare />
@@ -351,7 +358,7 @@ function Box({
 }: {
   icon: string;
   title: string;
-  question: string;
+  question?: string;
   link?: { href: string; label: string };
   children: React.ReactNode;
 }) {
@@ -364,7 +371,7 @@ function Box({
           </span>
           <div className="min-w-0">
             <h2 className="text-[16px] font-semibold tracking-tight text-hi">{title}</h2>
-            <p className="mt-0.5 text-[12.5px] leading-snug text-low">{question}</p>
+            {question && <p className="mt-0.5 text-[12.5px] leading-snug text-low">{question}</p>}
           </div>
         </div>
         {link && (

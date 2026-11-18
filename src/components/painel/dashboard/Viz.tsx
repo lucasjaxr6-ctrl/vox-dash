@@ -150,21 +150,10 @@ export function Split({ rows, metricLabel, empty }: { rows: SplitRow[]; metricLa
 export function SplitHeader({ rows, empty }: { rows: Part[]; empty: string }) {
   const total = rows.reduce((s, r) => s + r.cents, 0);
   const shareOf = (r: Part) => (total > 0 ? (r.cents / total) * 100 : 0);
-  const leader = total > 0 ? rows.reduce((a, b) => (b.cents > a.cents ? b : a)) : null;
   let left = 0;
   return (
     <div className="min-w-0">
-      <p className="text-[13px] text-mid">
-        {leader ? (
-          <>
-            <span className="font-semibold text-hi">{leader.label}</span> responde por{" "}
-            <span className="font-semibold tabular-nums text-hi">{Math.round(shareOf(leader))}%</span> do valor vendido
-          </>
-        ) : (
-          empty
-        )}
-      </p>
-      <div aria-hidden className="relative mt-3 h-2.5 overflow-hidden rounded-full bg-hover">
+      <div aria-hidden className="relative h-2.5 overflow-hidden rounded-full bg-hover">
         {total > 0 &&
           rows.map((r) => {
             const w = shareOf(r);

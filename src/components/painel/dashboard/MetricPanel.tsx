@@ -57,7 +57,6 @@ export default function MetricPanel({
               type="button"
               aria-pressed={on}
               onClick={() => setSel(on ? null : it.key)}
-              title={on ? "Clique para voltar a ver tudo no gráfico" : `Ver só ${it.label} no gráfico`}
               className={`group relative block min-w-0 rounded-2xl text-left transition duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 ${
                 on ? "ring-2 ring-brand/60" : "hover:ring-1 hover:ring-line-strong"
               } ${dim ? "opacity-60 hover:opacity-100" : ""} ${it.className ?? ""} ${itemClassName}`}
@@ -77,9 +76,6 @@ export default function MetricPanel({
         <div className={`mb-4 flex gap-3 ${compact ? "flex-col items-start" : "flex-wrap items-center justify-between"}`}>
           <div className="min-w-0">
             <h3 className="text-[14px] font-semibold text-hi">{sel ? selLabel : chartTitle}</h3>
-            <p className="mt-0.5 text-[12.5px] text-low">
-              {sel ? "Clique no cartão de novo para ver tudo junto" : "Clique num cartão acima para ver só ele"}
-            </p>
           </div>
           <div role="group" aria-label="Série do gráfico" className="flex flex-wrap gap-1 rounded-xl bg-card p-1 ring-1 ring-line">
             <Chip on={sel === null} onClick={() => setSel(null)}>

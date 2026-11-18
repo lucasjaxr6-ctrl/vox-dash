@@ -61,44 +61,39 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
   ];
 
   if (variant === "strip") {
+    // Faixa baixa e discreta: uma linha com os seis números, sem caixas internas.
+    const Fig = ({ label, value, share }: { label: string; value: number; share?: number | null }) => (
+      <div className="flex min-w-0 items-baseline gap-1.5 whitespace-nowrap">
+        <dt className="text-[12px] text-low">{label}</dt>
+        <dd className="flex items-baseline gap-1">
+          <span className="text-[15px] font-semibold tabular-nums text-hi">{loading ? <span className="text-dim">—</span> : <AnimatedNumber value={value} />}</span>
+          {share != null && !loading && <span className="text-[11.5px] tabular-nums text-dim">{share}%</span>}
+        </dd>
+      </div>
+    );
     return (
-      <section className={`flex min-w-0 flex-col rounded-[28px] bg-card p-3.5 ring-1 ring-line sm:p-6 lg:p-7 ${className}`} aria-label="Visitantes ao vivo">
-        <div className="flex items-start justify-between gap-4 px-1.5 pt-1.5 sm:px-0 sm:pt-0">
-          <div className="flex min-w-0 items-center gap-3">
-            <span aria-hidden className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-soft ring-1 ring-line">
-              <span className={`h-2.5 w-2.5 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
-            </span>
-            <div className="min-w-0">
-              <h2 className="text-[16px] font-semibold tracking-tight text-hi">Visitantes ao vivo</h2>
-              <p className="mt-0.5 text-[12.5px] text-low">Atualiza a cada 5 segundos · não segue o período</p>
-            </div>
-          </div>
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-soft px-3 py-1.5 text-[12px] font-medium text-mid ring-1 ring-line">
-            <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
-            Agora
-          </span>
+      <section
+        className={`flex min-w-0 flex-col gap-3 rounded-[22px] bg-card px-5 py-3.5 ring-1 ring-line lg:flex-row lg:items-center lg:gap-6 ${className}`}
+        aria-label="Visitantes ao vivo"
+      >
+        <div className="flex shrink-0 items-center gap-2" title="Atualiza a cada 5 segundos">
+          <span aria-hidden className={`h-2 w-2 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
+          <h2 className="text-[13px] font-medium text-mid">Visitantes ao vivo</h2>
         </div>
-        <div className="mt-6 grid flex-1 gap-4 md:grid-cols-2">
-          <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
-            <h3 className="text-[12.5px] font-medium text-low">Agora na loja</h3>
-            <dl className="mt-3 grid grid-cols-3 gap-2">
-              <LiveFigure label="Online" value={online} loading={loading} />
-              <LiveFigure label="Na loja" value={loja} loading={loading} share={online > 0 ? share(loja) : null} />
-              <LiveFigure label="No checkout" value={checkout} loading={loading} share={online > 0 ? share(checkout) : null} />
-            </dl>
+        <dl className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <Fig label="Online" value={online} />
+            <Fig label="Na loja" value={loja} share={online > 0 ? share(loja) : null} />
+            <Fig label="No checkout" value={checkout} share={online > 0 ? share(checkout) : null} />
           </div>
-          <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
-            <h3 className="flex items-baseline justify-between gap-2 text-[12.5px] font-medium text-low">
-              No checkout agora
-              <span className="hidden text-[11.5px] font-normal text-dim sm:inline">mesmas etapas do funil</span>
-            </h3>
-            <dl className="mt-3 grid grid-cols-3 gap-2">
-              {steps.map((s) => (
-                <LiveFigure key={s.label} label={s.label} value={s.n} loading={loading} share={checkout > 0 ? inCheckout(s.n) : null} />
-              ))}
-            </dl>
+          <span aria-hidden className="hidden h-4 w-px bg-line sm:block" />
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
+            <span className="w-full text-[12px] text-low sm:w-auto">No checkout agora</span>
+            {steps.map((st) => (
+              <Fig key={st.label} label={st.label} value={st.n} share={checkout > 0 ? inCheckout(st.n) : null} />
+            ))}
           </div>
-        </div>
+        </dl>
       </section>
     );
   }
