@@ -3,6 +3,7 @@ import { getActiveStore } from "@/lib/stores";
 import { resolveRange, rangeClause, rangeLabel } from "@/lib/painel-range";
 import { abandonedCartsSql, recoveredOrdersSql } from "@/lib/abandoned-carts";
 import DashboardView, { type DashboardData } from "@/components/painel/dashboard/DashboardView";
+import { dashboardSeries } from "@/lib/dashboard-series";
 
 // A resolução de período vive em @/lib/painel-range (compartilhada com a tela
 // de Dispositivos), para as duas nunca discordarem do que é "7 dias".
@@ -184,8 +185,12 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const pixTotal = Number(stats?.pixTotal ?? 0);
   const cardDecided = paidCardCount + Number(stats?.cardDeclined ?? 0);
 
+  // Séries no tempo dos gráficos (período atual + anterior de mesmo tamanho).
+  const series = await dashboardSeries(store.id, activeKey, since, until);
+
   const data: DashboardData = {
     storeName: store.name,
+    series,
     period: {
       key: activeKey,
       label: rangeLabel(activeKey, fromParam, toParam),

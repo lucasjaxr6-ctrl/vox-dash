@@ -3,7 +3,10 @@ import Link from "next/link";
 import AnimatedNumber from "./AnimatedNumber";
 import { PeriodTransition, PendingArea } from "./PeriodTransition";
 import PeriodControl from "./PeriodControl";
-import { Funnel, Split, TextLink, type FunnelStage } from "./Viz";
+import { Funnel, SplitHeader, SplitTile, TextLink, type SplitRow, type FunnelStage } from "./Viz";
+import MetricPanel from "./MetricPanel";
+import type { TrendSeries } from "./TrendChart";
+import type { SeriesBlock } from "@/lib/dashboard-series";
 import RecentOrders, { type RecentOrder } from "./RecentOrders";
 import LiveVisitors from "@/components/painel/LiveVisitors";
 import ReconcileOnMount from "@/components/painel/ReconcileOnMount";
@@ -11,6 +14,7 @@ import { IconeCartao, IconePix } from "@/components/painel/MetodoIcon";
 
 export type DashboardData = {
   storeName: string;
+  series: SeriesBlock;
   period: { key: string; label: string; from: string; to: string };
   paid: { cents: number; count: number; pixCents: number; pixCount: number; cardCents: number; cardCount: number };
   orders: { total: number; pending: number };
@@ -57,6 +61,39 @@ export default function DashboardView({ data }: { data: DashboardData }) {
   const mobile = { label: "Mobile", cents: dev.mobileCents, count: dev.mobileCount, color: "var(--viz-device)" };
   const desktop = { label: "Desktop", cents: dev.desktopCents, count: dev.desktopCount, color: "color-mix(in oklab, var(--viz-device) 40%, transparent)" };
 
+  // Gráficos: mesmos baldes de tempo para todas as seções.
+  const sb = data.series;
+  const chart = { labels: sb.labels, nowIndex: sb.nowIndex, currentLabel: sb.currentLabel, previousLabel: sb.previousLabel };
+  const serie = (key: string, label: string, color: string, unit: "brl" | "int"): TrendSeries => ({
+    key,
+    label,
+    color,
+    unit,
+    values: sb.cur[key] ?? [],
+    prev: sb.prev?.[key] ?? null,
+  });
+
+  const payRows: SplitRow[] = [
+    {
+      ...pix,
+      metric: pixRate === null ? "—" : <AnimatedNumber value={pixRate * 100} format="pct" />,
+      metricRate: pixRate,
+      metricNote: ap.pixTotal > 0 ? `${ap.pixPaid} de ${ap.pixTotal} pagos` : "sem Pix",
+      metricHint: "Pix pagos ÷ Pix gerados no período",
+    },
+    {
+      ...card,
+      metric: cardRate === null ? "—" : <AnimatedNumber value={cardRate * 100} format="pct" />,
+      metricRate: cardRate,
+      metricNote: ap.cardDecided > 0 ? `${ap.cardApproved} de ${ap.cardDecided} aprovados` : "sem cartão",
+      metricHint: "Aprovados ÷ decididos (aprovados + recusados). Cartão em análise não entra.",
+    },
+  ];
+  const devRows: SplitRow[] = [
+    { ...mobile, metric: ticketMobile === null ? "—" : <AnimatedNumber value={ticketMobile} format="brl" /> },
+    { ...desktop, color: "#5b7c99", metric: ticketDesktop === null ? "—" : <AnimatedNumber value={ticketDesktop} format="brl" /> },
+  ];
+
   return (
     <PeriodTransition>
       <div className="animate-fade-up space-y-6">
@@ -87,26 +124,53 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         {/* ── Resultado ── */}
         <Box icon="cash" title="Resultado" question="Quanto vendi" link={{ href: "/painel/vendas", label: "Ver vendas" }}>
           <PendingArea>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)]">
-              <Kpi
-                big
-                className="col-span-2 md:col-span-1"
-                label="Vendas pagas"
-                value={<AnimatedNumber value={paid.cents} format="brl" display />}
-                note={`${paid.count} ${plural(paid.count, "pedido pago", "pedidos pagos")}`}
-              />
-              <Kpi
-                label="Pedidos"
-                href="/painel/vendas"
-                value={<AnimatedNumber value={data.orders.total} />}
-                note={`${data.orders.pending} ${plural(data.orders.pending, "pendente", "pendentes")}`}
-              />
-              <Kpi
-                label="Ticket médio"
-                value={<AnimatedNumber value={data.ticketCents} format="brl" display />}
-                note="por venda paga"
-              />
-            </div>
+            <MetricPanel
+              {...chart}
+              chartTitle="Vendas × Pedidos × Ticket médio"
+              gridClassName="grid grid-cols-2 gap-4 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)]"
+              series={[
+                serie("paid", "Vendas pagas", "var(--viz-accent)", "brl"),
+                { ...serie("orders", "Pedidos", "var(--viz-device)", "int"), bars: true },
+                { ...serie("ticket", "Ticket médio", "var(--viz-card)", "brl"), dashed: true },
+              ]}
+              items={[
+                {
+                  key: "paid",
+                  label: "Vendas pagas",
+                  className: "col-span-2 md:col-span-1",
+                  node: (
+                    <Kpi
+                      big
+                      label="Vendas pagas"
+                      value={<AnimatedNumber value={paid.cents} format="brl" display />}
+                      note={`${paid.count} ${plural(paid.count, "pedido pago", "pedidos pagos")}`}
+                    />
+                  ),
+                },
+                {
+                  key: "orders",
+                  label: "Pedidos",
+                  node: (
+                    <Kpi
+                      label="Pedidos"
+                      value={<AnimatedNumber value={data.orders.total} />}
+                      note={`${data.orders.pending} ${plural(data.orders.pending, "pendente", "pendentes")}`}
+                    />
+                  ),
+                },
+                {
+                  key: "ticket",
+                  label: "Ticket médio",
+                  node: (
+                    <Kpi
+                      label="Ticket médio"
+                      value={<AnimatedNumber value={data.ticketCents} format="brl" display />}
+                      note="por venda paga"
+                    />
+                  ),
+                },
+              ]}
+            />
           </PendingArea>
         </Box>
 
@@ -142,28 +206,59 @@ export default function DashboardView({ data }: { data: DashboardData }) {
         <Box icon="refresh" title="Recuperação" question="O que ainda dá para salvar" link={{ href: "/painel/carrinhos", label: "Ver carrinhos" }}>
           <PendingArea>
             <h3 className="sr-only">Recuperação de vendas</h3>
-            <div className="grid gap-4 md:grid-cols-3">
-              <Recovery
-                title="Pendentes"
-                tone="warn"
-                cents={pending.cents}
-                note={`${pending.count} ${plural(pending.count, "pedido aguardando", "pedidos aguardando")}`}
-                detail={pending.count > 0 ? `Pix ${brl(pending.pixCents)} · Cartão ${brl(pending.cardCents)}` : undefined}
-              />
-              <Recovery
-                title="Carrinhos abandonados"
-                tone="lost"
-                cents={abandoned.cents}
-                note={`${abandoned.count} ${plural(abandoned.count, "carrinho", "carrinhos")}`}
-              />
-              <Recovery
-                title="Recuperadas"
-                tone="ok"
-                cents={recovered.cents}
-                note={`${recovered.count} ${plural(recovered.count, "venda voltou", "vendas voltaram")}`}
-                detail={recovered.count > 0 ? `De carrinho ${brl(recovered.cartCents)} · De Pix ${brl(recovered.pixCents)}` : undefined}
-              />
-            </div>
+            <MetricPanel
+              {...chart}
+              chartTitle="Pendentes × Carrinhos abandonados × Recuperadas"
+              gridClassName="grid gap-4 md:grid-cols-3"
+              series={[
+                serie("pending", "Pendentes", "#f5b031", "brl"),
+                serie("abandoned", "Carrinhos abandonados", "#f47185", "brl"),
+                serie("recovered", "Recuperadas", "#10b981", "brl"),
+              ]}
+              items={[
+                {
+                  key: "pending",
+                  label: "Pendentes",
+                  marker: false,
+                  node: (
+                    <Recovery
+                      title="Pendentes"
+                      tone="warn"
+                      cents={pending.cents}
+                      note={`${pending.count} ${plural(pending.count, "pedido aguardando", "pedidos aguardando")}`}
+                      detail={pending.count > 0 ? `Pix ${brl(pending.pixCents)} · Cartão ${brl(pending.cardCents)}` : undefined}
+                    />
+                  ),
+                },
+                {
+                  key: "abandoned",
+                  label: "Carrinhos abandonados",
+                  marker: false,
+                  node: (
+                    <Recovery
+                      title="Carrinhos abandonados"
+                      tone="lost"
+                      cents={abandoned.cents}
+                      note={`${abandoned.count} ${plural(abandoned.count, "carrinho", "carrinhos")}`}
+                    />
+                  ),
+                },
+                {
+                  key: "recovered",
+                  label: "Recuperadas",
+                  marker: false,
+                  node: (
+                    <Recovery
+                      title="Recuperadas"
+                      tone="ok"
+                      cents={recovered.cents}
+                      note={`${recovered.count} ${plural(recovered.count, "venda voltou", "vendas voltaram")}`}
+                      detail={recovered.count > 0 ? `De carrinho ${brl(recovered.cartCents)} · De Pix ${brl(recovered.pixCents)}` : undefined}
+                    />
+                  ),
+                },
+              ]}
+            />
           </PendingArea>
         </Box>
 
@@ -172,39 +267,43 @@ export default function DashboardView({ data }: { data: DashboardData }) {
           <PendingArea>
             <div className="grid gap-4 xl:grid-cols-2">
               <Card title="Formas de pagamento" subtitle="Por onde o dinheiro entrou">
-                <Split
-                  metricLabel="Aprovação"
-                  empty="Nenhuma venda paga no período."
-                  rows={[
-                    {
-                      ...pix,
-                      metric: pixRate === null ? "—" : <AnimatedNumber value={pixRate * 100} format="pct" />,
-                      metricRate: pixRate,
-                      metricNote: ap.pixTotal > 0 ? `${ap.pixPaid} de ${ap.pixTotal} pagos` : "sem Pix",
-                      metricHint: "Pix pagos ÷ Pix gerados no período",
-                    },
-                    {
-                      ...card,
-                      metric: cardRate === null ? "—" : <AnimatedNumber value={cardRate * 100} format="pct" />,
-                      metricRate: cardRate,
-                      metricNote: ap.cardDecided > 0 ? `${ap.cardApproved} de ${ap.cardDecided} aprovados` : "sem cartão",
-                      metricHint: "Aprovados ÷ decididos (aprovados + recusados). Cartão em análise não entra.",
-                    },
-                  ]}
-                />
+                <SplitHeader rows={payRows} empty="Nenhuma venda paga no período." />
+                <div className="mt-5">
+                  <MetricPanel
+                    {...chart}
+                    chartTitle="Pix × Cartão"
+                    compact
+                    gridClassName="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                    series={[serie("pix", "Pix", "var(--viz-pix)", "brl"), serie("card", "Cartão", "var(--viz-card)", "brl")]}
+                    items={payRows.map((r, i) => ({
+                      key: i === 0 ? "pix" : "card",
+                      label: r.label,
+                      marker: false,
+                      node: <SplitTile row={r} total={paid.pixCents + paid.cardCents} metricLabel="Aprovação" />,
+                    }))}
+                  />
+                </div>
               </Card>
 
               {/* Tablet entra em Mobile, e pedidos anteriores ao registro de
                   dispositivo ficam de fora — mesma regra da tela cheia. */}
               <Card title="Dispositivos" subtitle="De onde o cliente comprou" link={{ href: "/painel/dispositivos", label: "Detalhes" }}>
-                <Split
-                  metricLabel="Ticket médio"
-                  empty="Nenhuma venda paga no período."
-                  rows={[
-                    { ...mobile, metric: ticketMobile === null ? "—" : <AnimatedNumber value={ticketMobile} format="brl" /> },
-                    { ...desktop, metric: ticketDesktop === null ? "—" : <AnimatedNumber value={ticketDesktop} format="brl" /> },
-                  ]}
-                />
+                <SplitHeader rows={devRows} empty="Nenhuma venda paga no período." />
+                <div className="mt-5">
+                  <MetricPanel
+                    {...chart}
+                    chartTitle="Mobile × Desktop"
+                    compact
+                    gridClassName="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                    series={[serie("mobile", "Mobile", "var(--viz-device)", "brl"), serie("desktop", "Desktop", "#5b7c99", "brl")]}
+                    items={devRows.map((r, i) => ({
+                      key: i === 0 ? "mobile" : "desktop",
+                      label: r.label,
+                      marker: false,
+                      node: <SplitTile row={r} total={dev.mobileCents + dev.desktopCents} metricLabel="Ticket médio" />,
+                    }))}
+                  />
+                </div>
               </Card>
             </div>
           </PendingArea>
@@ -350,7 +449,7 @@ function Kpi({
       <div className="mt-2.5 truncate text-[12.5px] text-low">{note}</div>
     </>
   );
-  const cls = `group block min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5 ${className}`;
+  const cls = `group block h-full min-w-0 rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5 ${className}`;
   if (href) {
     return (
       <Link
@@ -381,7 +480,7 @@ function Recovery({
   link?: { href: string; label: string };
 }) {
   return (
-    <div className="flex min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
+    <div className="flex h-full min-w-0 flex-col rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
       <h3 className="flex items-center gap-2 text-[13px] font-medium text-low">
         <span aria-hidden className={`h-2 w-2 rounded-full ${tone === "warn" ? "bg-amber-400" : tone === "lost" ? "bg-rose-400" : "bg-emerald-500"}`} />
         {title}

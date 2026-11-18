@@ -203,12 +203,12 @@ export const VENDA_RECUPERADA = `(${PIX_RECUPERADO} OR ${CARRINHO_RECUPERADO})`;
  *
  * `rangeSql` filtra por `o.createdAt`, como o card de vendas.
  */
-export function recoveredOrdersSql(rangeSql = ""): string {
+export function recoveredOrdersSql(rangeSql = "", groupExpr?: string): string {
   // A quebra por origem usa a precedência do PIX: ele é o último toque antes
   // do pagamento. Assim os dois baldes somam exatamente o total, sem que uma
   // venda que recebeu os dois e-mails apareça duas vezes.
   return `
-    SELECT COUNT(*) AS n,
+    SELECT ${groupExpr ? `${groupExpr} AS b, ` : ""}COUNT(*) AS n,
            COALESCE(SUM(o.totalCents), 0) AS valor,
            COALESCE(SUM(${PIX_RECUPERADO}), 0) AS pixN,
            COALESCE(SUM(CASE WHEN ${PIX_RECUPERADO} THEN o.totalCents ELSE 0 END), 0) AS pixValor,
@@ -217,7 +217,7 @@ export function recoveredOrdersSql(rangeSql = ""): string {
       FROM orders o
      WHERE o.storeId = ?
        AND o.status IN ('PAID','SHIPPED')
-       AND ${VENDA_RECUPERADA}${rangeSql}`;
+       AND ${VENDA_RECUPERADA}${rangeSql}${groupExpr ? " GROUP BY b" : ""}`;
 }
 
 /**
