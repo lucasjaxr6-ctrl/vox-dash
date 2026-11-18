@@ -90,7 +90,7 @@ export default function LiveVisitors({ className = "", variant = "card" }: { cla
           <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-soft p-4 ring-1 ring-line sm:p-5">
             <h3 className="flex items-baseline justify-between gap-2 text-[12.5px] font-medium text-low">
               No checkout agora
-              <span className="hidden text-[11.5px] font-normal text-dim 2xl:inline">mesmas etapas do funil</span>
+              <span className="hidden text-[11.5px] font-normal text-dim sm:inline">mesmas etapas do funil</span>
             </h3>
             <dl className="mt-3 grid grid-cols-3 gap-2">
               {steps.map((s) => (
