@@ -18,7 +18,9 @@ type Live = {
 //
 // Sem ponto piscando: "ao vivo" é dito uma vez, em texto. Um indicador em loop
 // disputa o olho com os números o tempo todo e não informa nada a mais.
-export default function LiveVisitors({ className = "" }: { className?: string }) {
+// `variant="strip"`: faixa compacta do topo do dashboard (seção "Agora"), com
+// os mesmos seis números e porcentagens do cartão, lado a lado numa linha só.
+export default function LiveVisitors({ className = "", variant = "card" }: { className?: string; variant?: "card" | "strip" }) {
   const [d, setD] = useState<Live | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,6 +59,44 @@ export default function LiveVisitors({ className = "" }: { className?: string })
     { label: "Endereço", n: d?.funnel?.endereco ?? 0 },
     { label: "Pagamento", n: d?.funnel?.pagamento ?? 0 },
   ];
+
+  if (variant === "strip") {
+    return (
+      <section className={`min-w-0 rounded-2xl bg-card px-5 py-4 ring-1 ring-emerald-500/20 ${className}`} aria-label="Visitantes ao vivo">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-[14px] font-semibold text-hi">Visitantes ao vivo</h2>
+            <p className="mt-0.5 text-[12.5px] text-low">Atualiza a cada 5 segundos · não segue o período</p>
+          </div>
+          <span className="flex shrink-0 items-center gap-1.5 text-[12px] font-medium text-low">
+            <span aria-hidden className={`h-1.5 w-1.5 rounded-full ${online > 0 ? "bg-emerald-500" : "bg-dim"}`} />
+            Agora
+          </span>
+        </div>
+        <div className="grid gap-x-8 gap-y-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+          <div className="min-w-0">
+            <h3 className="text-[12.5px] font-medium text-low">Agora na loja</h3>
+            <dl className="mt-2 grid grid-cols-3 gap-2">
+              <LiveFigure size="sm" label="Online" value={online} loading={loading} />
+              <LiveFigure size="sm" label="Na loja" value={loja} loading={loading} share={online > 0 ? share(loja) : null} />
+              <LiveFigure size="sm" label="No checkout" value={checkout} loading={loading} share={online > 0 ? share(checkout) : null} />
+            </dl>
+          </div>
+          <div className="min-w-0 border-t border-line pt-4 md:border-l md:border-t-0 md:pl-8 md:pt-0">
+            <h3 className="flex items-baseline justify-between gap-2 text-[12.5px] font-medium text-low">
+              No checkout agora
+              <span className="hidden text-[11.5px] font-normal text-dim sm:inline">mesmas etapas do funil</span>
+            </h3>
+            <dl className="mt-2 grid grid-cols-3 gap-2">
+              {steps.map((s) => (
+                <LiveFigure size="sm" key={s.label} label={s.label} value={s.n} loading={loading} share={checkout > 0 ? inCheckout(s.n) : null} />
+              ))}
+            </dl>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className={`flex min-w-0 flex-col rounded-2xl bg-card p-5 ${className}`}>
@@ -100,17 +140,19 @@ function LiveFigure({
   value,
   loading,
   share,
+  size = "md",
 }: {
   label: string;
   value: number;
   loading: boolean;
   share?: number | null;
+  size?: "sm" | "md";
 }) {
   return (
     <div className="min-w-0">
       <dt className="whitespace-nowrap text-[12px] text-low">{label}</dt>
       <dd className="mt-1.5 flex items-baseline gap-1.5">
-        <span className="text-[24px] font-semibold leading-none tracking-[-0.02em] text-hi">
+        <span className={`${size === "sm" ? "text-[20px]" : "text-[24px]"} font-semibold leading-none tracking-[-0.02em] text-hi`}>
           {loading ? <span className="text-dim">—</span> : <AnimatedNumber value={value} />}
         </span>
         {share != null && !loading && <span className="text-[12px] tabular-nums text-low">{share}%</span>}
