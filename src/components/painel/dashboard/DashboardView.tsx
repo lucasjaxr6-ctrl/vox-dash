@@ -63,14 +63,13 @@ export default function DashboardView({ data }: { data: DashboardData }) {
 
   // Gráficos: mesmos baldes de tempo para todas as seções.
   const sb = data.series;
-  const chart = { labels: sb.labels, nowIndex: sb.nowIndex, currentLabel: sb.currentLabel, previousLabel: sb.previousLabel };
+  const chart = { labels: sb.labels, nowIndex: sb.nowIndex, currentLabel: sb.currentLabel };
   const serie = (key: string, label: string, color: string, unit: "brl" | "int"): TrendSeries => ({
     key,
     label,
     color,
     unit,
     values: sb.cur[key] ?? [],
-    prev: sb.prev?.[key] ?? null,
   });
 
   const payRows: SplitRow[] = [

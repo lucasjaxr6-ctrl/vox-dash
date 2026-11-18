@@ -19,9 +19,7 @@ export type SeriesBlock = {
   /** Último balde que já aconteceu (o resto do dia de hoje ainda não chegou). */
   nowIndex: number;
   currentLabel: string;
-  previousLabel: string | null;
   cur: Record<string, number[]>;
-  prev: Record<string, number[]> | null;
 };
 
 const DAY = 86400000;
@@ -36,7 +34,7 @@ const daysBetween = (a: string, b: string) => Math.round((spMidnight(b).getTime(
 
 const MES = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 const dayMonth = (ymd: string) => `${Number(ymd.slice(8, 10))} de ${MES[Number(ymd.slice(5, 7)) - 1]}`;
-const rangeText = (a: string, b: string) => `${dayMonth(a)} - ${dayMonth(b)}`;
+const rangeText = (a: string, b: string) => (a === b ? dayMonth(a) : `${dayMonth(a)} - ${dayMonth(b)}`);
 
 function bucketExpr(col: string, gran: Gran): string {
   const local = `DATE_SUB(${col}, INTERVAL 3 HOUR)`;
@@ -56,11 +54,11 @@ type Plan = {
 };
 
 /** Baldes de uma faixa [since, until). */
-function plan(since: Date, until: Date, forceGran?: Gran): Plan {
+function plan(since: Date, until: Date): Plan {
   const first = ymdSP(since);
   const last = ymdSP(new Date(until.getTime() - 1));
   const days = daysBetween(first, last) + 1;
-  const gran: Gran = forceGran ?? (days <= 1 ? "hour" : days <= 62 ? "day" : "month");
+  const gran: Gran = (days <= 1 ? "hour" : days <= 62 ? "day" : "month");
   const now = Date.now();
   const keys: string[] = [];
   const labels: string[] = [];
@@ -151,42 +149,29 @@ async function collect(storeId: string, p: Plan): Promise<Record<string, number[
 }
 
 /**
- * Séries do período escolhido e do período anterior de mesmo tamanho (para a
- * linha de comparação). "Tudo" não tem anterior.
+ * Séries do período escolhido no filtro — só dele, sem período de comparação.
+ * Os baldes começam na meia-noite do primeiro dia, mas a consulta usa o limite
+ * exato do filtro ("7 dias" = últimas 168 h), para o gráfico somar o mesmo que
+ * os cartões.
  */
 export async function dashboardSeries(
   storeId: string,
-  key: string,
+  _key: string,
   since: Date | null,
   until: Date | null,
 ): Promise<SeriesBlock> {
-  const now = new Date();
   let from = since;
   if (!from) {
     const [row] = await query<{ m: string | Date | null }>(`SELECT MIN(createdAt) AS m FROM orders WHERE storeId = ?`, [storeId]);
     from = row?.m ? spMidnight(ymdSP(new Date(row.m))) : spMidnight(ymdTodaySP());
   }
-  // Dias inteiros: o gráfico começa na meia-noite do primeiro dia.
   const start = spMidnight(ymdSP(from));
   const end = until ?? new Date(spMidnight(ymdTodaySP()).getTime() + DAY);
   const cur = plan(start, end);
+  // Recorte exato do filtro (sem limite inferior em "Tudo").
+  cur.since = since ?? new Date(0);
+  if (!until) cur.until = new Date(Date.now() + 60000);
 
-  let prevPlan: Plan | null = null;
-  if (key !== "all" && since) {
-    const span = end.getTime() - start.getTime();
-    prevPlan = plan(new Date(start.getTime() - span), start, cur.gran);
-    // Mesmo número de baldes dos dois lados, para as linhas se sobreporem.
-    prevPlan.keys = prevPlan.keys.slice(0, cur.keys.length);
-  }
-
-  const [c, pv] = await Promise.all([collect(storeId, cur), prevPlan ? collect(storeId, prevPlan) : Promise.resolve(null)]);
-  return {
-    gran: cur.gran,
-    labels: cur.labels,
-    nowIndex: cur.nowIndex,
-    currentLabel: cur.label,
-    previousLabel: prevPlan?.label ?? null,
-    cur: c,
-    prev: pv,
-  };
+  const c = await collect(storeId, cur);
+  return { gran: cur.gran, labels: cur.labels, nowIndex: cur.nowIndex, currentLabel: cur.label, cur: c };
 }

@@ -9,8 +9,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 //     de grandezas diferentes (R$ e quantidade) dividam o mesmo desenho. O eixo
 //     da esquerda é da primeira série; o da direita, da segunda, se for de outra
 //     unidade. Os valores reais aparecem na dica ao passar o mouse.
-//   - FILTRADO (uma série): a série do período na cor dela, com área, e o mesmo
-//     período anterior em cinza por baixo — como comparar hoje com ontem.
+//   - FILTRADO (uma série): só a série escolhida, na cor dela, com área.
+//
+// Sempre só o período do filtro de cima: sem comparação com outro período.
 //
 // O que ainda não aconteceu (resto do dia de hoje) vira um tracejado na base.
 
@@ -22,7 +23,6 @@ export type TrendSeries = {
   color: string;
   unit: Unit;
   values: number[];
-  prev?: number[] | null;
   /** Barras em vez de linha (no modo cruzado). */
   bars?: boolean;
   dashed?: boolean;
@@ -79,13 +79,11 @@ export default function TrendChart({
   labels,
   nowIndex,
   currentLabel,
-  previousLabel,
 }: {
   series: TrendSeries[];
   labels: string[];
   nowIndex: number;
   currentLabel: string;
-  previousLabel: string | null;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(720);
@@ -108,7 +106,7 @@ export default function TrendChart({
   const scales = useMemo(() => {
     const live = (s: TrendSeries) => s.values.slice(0, nowIndex + 1);
     if (single || shared) {
-      const all = series.flatMap((s) => [...live(s), ...(single && s.prev ? s.prev : [])]);
+      const all = series.flatMap((s) => live(s));
       const m = niceMax(Math.max(0, ...all), series[0].unit);
       return series.map(() => m);
     }
@@ -181,11 +179,6 @@ export default function TrendChart({
           ) : null,
         )}
 
-        {/* Período anterior (só no filtrado) */}
-        {single && series[0].prev && (
-          <path d={path(xs, series[0].prev.slice(0, n).map((v) => yOf(v, scales[0])))} fill="none" stroke="var(--viz-mid)" strokeOpacity={0.55} strokeWidth={1.75} strokeLinejoin="round" strokeLinecap="round" />
-        )}
-
         {series.map((s, si) => {
           const max = scales[si];
           if (s.bars && !single) {
@@ -240,38 +233,21 @@ export default function TrendChart({
             <div key={s.key} className="flex items-center justify-between gap-4 py-0.5">
               <span className="flex items-center gap-1.5 text-low">
                 <span className="h-2 w-2 rounded-full" style={{ background: s.color }} />
-                {single ? "Atual" : s.label}
+                {s.label}
               </span>
               <span className="font-semibold tabular-nums text-hi">{hover <= live ? fmt(s.values[hover] ?? 0, s.unit) : "—"}</span>
             </div>
           ))}
-          {single && series[0].prev && (
-            <div className="flex items-center justify-between gap-4 py-0.5">
-              <span className="flex items-center gap-1.5 text-low">
-                <span className="h-2 w-2 rounded-full bg-[var(--viz-mid)]" />
-                Anterior
-              </span>
-              <span className="tabular-nums text-mid">{fmt(series[0].prev[hover] ?? 0, series[0].unit)}</span>
-            </div>
-          )}
         </div>
       )}
 
       {/* Legenda */}
       <div className="mt-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 text-[12px] text-mid">
         {single ? (
-          <>
-            <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full" style={{ background: series[0].color }} />
-              {currentLabel}
-            </span>
-            {series[0].prev && previousLabel && (
-              <span className="flex items-center gap-1.5">
-                <span className="h-2 w-2 rounded-full bg-[var(--viz-mid)]" />
-                {previousLabel}
-              </span>
-            )}
-          </>
+          <span className="flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full" style={{ background: series[0].color }} />
+            {series[0].label} · {currentLabel}
+          </span>
         ) : (
           series.map((s) => (
             <span key={s.key} className="flex items-center gap-1.5">

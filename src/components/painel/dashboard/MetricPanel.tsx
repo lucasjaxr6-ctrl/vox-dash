@@ -6,7 +6,7 @@ import TrendChart, { type TrendSeries } from "./TrendChart";
 // Cartões que viram filtro do gráfico logo abaixo.
 //
 // Sem nada escolhido, o gráfico CRUZA todas as séries da seção. Clicar num
-// cartão filtra o gráfico só para ele (com o período anterior de comparação);
+// cartão filtra o gráfico só para ele, no mesmo período do filtro de cima;
 // clicar de novo, ou em "Todos", volta ao cruzado.
 
 export type PanelItem = {
@@ -24,7 +24,6 @@ export default function MetricPanel({
   labels,
   nowIndex,
   currentLabel,
-  previousLabel,
   gridClassName,
   chartTitle,
   itemClassName = "",
@@ -35,7 +34,6 @@ export default function MetricPanel({
   labels: string[];
   nowIndex: number;
   currentLabel: string;
-  previousLabel: string | null;
   gridClassName: string;
   chartTitle: string;
   itemClassName?: string;
@@ -80,7 +78,7 @@ export default function MetricPanel({
           <div className="min-w-0">
             <h3 className="text-[14px] font-semibold text-hi">{sel ? selLabel : chartTitle}</h3>
             <p className="mt-0.5 text-[12.5px] text-low">
-              {sel ? "Comparado ao período anterior · clique no cartão de novo para cruzar tudo" : "Clique num cartão acima para ver só ele"}
+              {sel ? "Clique no cartão de novo para ver tudo junto" : "Clique num cartão acima para ver só ele"}
             </p>
           </div>
           <div role="group" aria-label="Série do gráfico" className="flex flex-wrap gap-1 rounded-xl bg-card p-1 ring-1 ring-line">
@@ -94,7 +92,7 @@ export default function MetricPanel({
             ))}
           </div>
         </div>
-        <TrendChart series={shown} labels={labels} nowIndex={nowIndex} currentLabel={currentLabel} previousLabel={previousLabel} />
+        <TrendChart series={shown} labels={labels} nowIndex={nowIndex} currentLabel={currentLabel} />
       </div>
     </div>
   );
