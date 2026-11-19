@@ -132,7 +132,7 @@ export default function DashboardView({ data }: { data: DashboardData }) {
                   <div className="whitespace-nowrap text-[64px] font-semibold leading-none tracking-[-0.04em] text-hi">
                     {conversion === null ? "—" : <AnimatedNumber value={conversion} format="pct" />}
                   </div>
-                  <p className="mt-3 text-[13.5px] text-mid">{base > 0 ? `${bought} de ${base} no checkout` : "Nenhum checkout"}</p>
+                  <p className="mt-3 text-[13.5px] text-mid">{base > 0 ? `${bought.toLocaleString("pt-BR")} de ${base.toLocaleString("pt-BR")} no checkout` : "Nenhum checkout"}</p>
                   {conversion !== null && (
                     <span aria-hidden className="relative mt-4 block h-1.5 overflow-hidden rounded-full bg-emerald-900/10 dark:bg-white/10">
                       <span className="absolute inset-y-0 left-0 rounded-full bg-emerald-500 dark:bg-emerald-400" style={{ width: `${Math.min(100, conversion)}%` }} />
